@@ -36,6 +36,7 @@ public class GameManager : Manager<GameManager>
 		EventManager.Instance.AddListener<PlayButtonClickedEvent>(PlayButtonClicked);
 		EventManager.Instance.AddListener<ResumeButtonClickedEvent>(ResumeButtonClicked);
 		EventManager.Instance.AddListener<EscapeButtonClickedEvent>(EscapeButtonClicked);
+        EventManager.Instance.AddListener<PlayerHasAttackedEvent>(PlayerHasAttacked);
 	}
 
 	public override void UnsubscribeEvents()
@@ -53,7 +54,7 @@ public class GameManager : Manager<GameManager>
 	#region Manager implementation
 	protected override IEnumerator InitCoroutine()
 	{
-		Menu();
+		Play();
 		//EventManager.Instance.Raise(new GameStatisticsChangedEvent() { eBestScore = BestScore, eScore = 0, eNLives = 0, eNEnemiesLeftBeforeVictory = 0 });
 		yield break;
 	}
@@ -80,7 +81,12 @@ public class GameManager : Manager<GameManager>
 		if (IsPlaying)
 			Pause();
 	}
-	#endregion
+    #endregion
+
+    private void PlayerHasAttacked(PlayerHasAttackedEvent e)
+    {
+        Debug.Log("Has Attacked");
+    }
 
 	//EVENTS
 	private void Menu()
@@ -92,7 +98,8 @@ public class GameManager : Manager<GameManager>
 
 	private void Play()
 	{
-		//InitNewGame();
+        //InitNewGame();
+        Cursor.visible = false;
 		SetTimeScale(1);
 		m_GameState = GameState.gamePlay;
 		EventManager.Instance.Raise(new GamePlayEvent());
