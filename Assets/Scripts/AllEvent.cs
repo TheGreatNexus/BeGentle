@@ -32,3 +32,11 @@ public class MainMenuButtonClickedEvent : SDD.Events.Event
 {
 }
 #endregion
+
+#region Player actions
+
+public class PlayerHasAttackedEvent : SDD.Events.Event
+{
+}
+
+#endregion
