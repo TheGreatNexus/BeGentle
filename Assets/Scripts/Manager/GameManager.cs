@@ -22,6 +22,23 @@ public class GameManager : Manager<GameManager>
 		Time.timeScale = m_TimeScale;
 	}
 
+	//Lives
+	[SerializeField] private int m_NStartLives;
+	private GameObject[] gameObjects;
+	private int checkPointNb;
+
+	private int m_NLives;
+	public int NLives { get { return m_NLives; } }
+	void DecrementNLives(int decrement)
+	{
+		SetNLives(m_NLives - decrement);
+	}
+
+	void SetNLives(int nLives)
+	{
+		m_NLives = nLives;
+		EventManager.Instance.Raise(new GameStatisticsChangedEvent() { eNLives = m_NLives });
+	}
 	//Players
 	//[SerializeField]
 	//List<PlayerController> m_Players = new List<PlayerController>();
@@ -33,6 +50,7 @@ public class GameManager : Manager<GameManager>
 
 		//MainMenuManager
 		EventManager.Instance.AddListener<MainMenuButtonClickedEvent>(MainMenuButtonClicked);
+		EventManager.Instance.AddListener<PlayerHasBeenHitEvent>(PlayerHasBeenHit);
 		EventManager.Instance.AddListener<PlayButtonClickedEvent>(PlayButtonClicked);
 		EventManager.Instance.AddListener<ResumeButtonClickedEvent>(ResumeButtonClicked);
 		EventManager.Instance.AddListener<EscapeButtonClickedEvent>(EscapeButtonClicked);
@@ -45,6 +63,7 @@ public class GameManager : Manager<GameManager>
 
 		//MainMenuManager
 		EventManager.Instance.RemoveListener<MainMenuButtonClickedEvent>(MainMenuButtonClicked);
+		EventManager.Instance.RemoveListener<PlayerHasBeenHitEvent>(PlayerHasBeenHit);
 		EventManager.Instance.RemoveListener<PlayButtonClickedEvent>(PlayButtonClicked);
 		EventManager.Instance.RemoveListener<ResumeButtonClickedEvent>(ResumeButtonClicked);
 		EventManager.Instance.RemoveListener<EscapeButtonClickedEvent>(EscapeButtonClicked);
@@ -81,9 +100,20 @@ public class GameManager : Manager<GameManager>
 		if (IsPlaying)
 			Pause();
 	}
-    #endregion
 
-    private void PlayerHasAttacked(PlayerHasAttackedEvent e)
+	private void PlayerHasBeenHit(PlayerHasBeenHitEvent e)
+	{
+		//EventManager.Instance.Raise(new PlayerHasBeenHitAudioEvent());
+		DecrementNLives(1);
+		EventManager.Instance.Raise(new GameStatisticsChangedEvent() { eNLives = m_NLives });
+		/*if (m_NLives == 0)
+		{
+			EndGame("defeat");
+		}*/
+	}
+	#endregion
+
+	private void PlayerHasAttacked(PlayerHasAttackedEvent e)
     {
         Debug.Log("Has Attacked");
     }

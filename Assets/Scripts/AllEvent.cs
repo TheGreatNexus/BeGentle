@@ -16,6 +16,10 @@ public class GamePauseEvent : SDD.Events.Event
 public class GameResumeEvent : SDD.Events.Event
 {
 }
+public class GameStatisticsChangedEvent : SDD.Events.Event
+{
+    public int eNLives { get; set; }
+}
 #endregion
 
 #region MenuManager Events
@@ -37,6 +41,15 @@ public class MainMenuButtonClickedEvent : SDD.Events.Event
 
 public class PlayerHasAttackedEvent : SDD.Events.Event
 {
+}
+public class PlayerHasBeenHitEvent : SDD.Events.Event
+{
+    public Player ePlayer;
+}
+
+public class PlayerHasBeenHitAudioEvent : SDD.Events.Event
+{
+
 }
 
 #endregion
