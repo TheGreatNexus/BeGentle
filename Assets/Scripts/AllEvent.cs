@@ -10,6 +10,9 @@ public class GameMenuEvent : SDD.Events.Event
 public class GamePlayEvent : SDD.Events.Event
 {
 }
+public class GameOverEvent : SDD.Events.Event
+{
+}
 public class GamePauseEvent : SDD.Events.Event
 {
 }
