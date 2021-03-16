@@ -24,11 +24,6 @@ public class EnnemyMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-
-        Debug.Log(agent.transform);
         agent.SetDestination(player.transform.position);
-
-
     }
 }
