@@ -5,10 +5,17 @@ using SDD.Events;
 
 public class Player : MonoBehaviour
 {
+    //Cooldown variables
+    float m_CooldownHit = 1;
+    float m_NextHit = 0;
+
+    //Player variables
     private float m_playerHP;
     public float m_PlayerDamages;
     private float m_PlayerCDAttack;
     private float m_Range = 200;
+
+
     Animator m_Anim;
     // Start is called before the first frame update
     void Start()
@@ -40,5 +47,12 @@ public class Player : MonoBehaviour
         //     Debug.DrawRay(new Vector3(transform.position.x, (transform.position.y) + 1, transform.position.z), transform.TransformDirection(Vector3.forward) * 1000, Color.white);
         //     Debug.Log("Did not Hit");
         // }
+    }
+
+    private void OnTriggerStay(Collider other){
+        if(other.tag == "Enemy" && Time.time > m_NextHit){
+                m_NextHit = Time.time + m_CooldownHit;
+                EventManager.Instance.Raise(new PlayerHasBeenHitEvent());
+        }
     }
 }
