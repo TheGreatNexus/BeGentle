@@ -36,6 +36,10 @@ public class HUDManager : Manager<HUDManager>
 		{
 			m_Life2.SetActive(false);
 		}
+        if (e.eNLives == 0)
+        {
+            m_Life1.SetActive(false);
+        }
 	}
 	#endregion
 }

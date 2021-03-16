@@ -77,6 +77,10 @@ public class MenuManager : Manager<MenuManager>
 	{
 		EventManager.Instance.Raise(new MainMenuButtonClickedEvent());
 	}
+    public void QuitButtonHasBeenClicked()
+    {
+        EventManager.Instance.Raise(new QuitButtonClickedEvent());
+    }
 	#endregion
 
 	#region Callbacks to GameManager events
@@ -104,5 +108,10 @@ public class MenuManager : Manager<MenuManager>
 	{
 		OpenPanel(null);
 	}
+
+    protected override void GameQuit(GameQuitEvent e)
+    {
+        Application.Quit();
+    }
 	#endregion
 }

@@ -23,21 +23,21 @@ public class GameManager : Manager<GameManager>
 	}
 
 	//Lives
-	[SerializeField] private int m_NStartLives;
+	//[SerializeField] private int m_NStartLives;
 	private GameObject[] gameObjects;
 	private int checkPointNb;
 
-	private int m_NLives;
-	public int NLives { get { return m_NLives; } }
+	private int m_StartLives = 3;
+	public int NLives { get { return m_StartLives; } }
 	void DecrementNLives(int decrement)
 	{
-		SetNLives(m_NLives - decrement);
+		SetNLives(m_StartLives - decrement);
 	}
 
 	void SetNLives(int nLives)
 	{
-		m_NLives = nLives;
-		EventManager.Instance.Raise(new GameStatisticsChangedEvent() { eNLives = m_NLives });
+		m_StartLives = nLives;
+		EventManager.Instance.Raise(new GameStatisticsChangedEvent() { eNLives = m_StartLives });
 	}
 	//Players
 	//[SerializeField]
@@ -54,7 +54,7 @@ public class GameManager : Manager<GameManager>
 		EventManager.Instance.AddListener<PlayButtonClickedEvent>(PlayButtonClicked);
 		EventManager.Instance.AddListener<ResumeButtonClickedEvent>(ResumeButtonClicked);
 		EventManager.Instance.AddListener<EscapeButtonClickedEvent>(EscapeButtonClicked);
-        EventManager.Instance.AddListener<PlayerHasAttackedEvent>(PlayerHasAttacked);
+        EventManager.Instance.AddListener<QuitButtonClickedEvent>(QuitButtonClicked);
 	}
 
 	public override void UnsubscribeEvents()
@@ -67,13 +67,14 @@ public class GameManager : Manager<GameManager>
 		EventManager.Instance.RemoveListener<PlayButtonClickedEvent>(PlayButtonClicked);
 		EventManager.Instance.RemoveListener<ResumeButtonClickedEvent>(ResumeButtonClicked);
 		EventManager.Instance.RemoveListener<EscapeButtonClickedEvent>(EscapeButtonClicked);
+        EventManager.Instance.RemoveListener<QuitButtonClickedEvent>(QuitButtonClicked);
 	}
 	#endregion
 
 	#region Manager implementation
 	protected override IEnumerator InitCoroutine()
 	{
-		Play();
+		Menu();
 		//EventManager.Instance.Raise(new GameStatisticsChangedEvent() { eBestScore = BestScore, eScore = 0, eNLives = 0, eNEnemiesLeftBeforeVictory = 0 });
 		yield break;
 	}
@@ -100,16 +101,21 @@ public class GameManager : Manager<GameManager>
 		if (IsPlaying)
 			Pause();
 	}
+    private void QuitButtonClicked(QuitButtonClickedEvent e)
+    {
+        Quit();
+    }
 
 	private void PlayerHasBeenHit(PlayerHasBeenHitEvent e)
 	{
 		//EventManager.Instance.Raise(new PlayerHasBeenHitAudioEvent());
 		DecrementNLives(1);
-		EventManager.Instance.Raise(new GameStatisticsChangedEvent() { eNLives = m_NLives });
-		/*if (m_NLives == 0)
+		//Debug.Log(m_StartLives);
+		EventManager.Instance.Raise(new GameStatisticsChangedEvent() { eNLives = m_StartLives });
+		if (m_StartLives == 0)
 		{
-			EndGame("defeat");
-		}*/
+            PlayerLoose();
+		}
 	}
 	#endregion
 
@@ -121,10 +127,15 @@ public class GameManager : Manager<GameManager>
 	//EVENTS
 	private void Menu()
 	{
+        Cursor.visible = true;
 		SetTimeScale(0);
 		m_GameState = GameState.gameMenu;
 		EventManager.Instance.Raise(new GameMenuEvent());
 	}
+    private void Quit()
+    {
+        EventManager.Instance.Raise(new GameQuitEvent());
+    }
 
 	private void Play()
 	{
@@ -132,11 +143,14 @@ public class GameManager : Manager<GameManager>
         Cursor.visible = false;
 		SetTimeScale(1);
 		m_GameState = GameState.gamePlay;
-		EventManager.Instance.Raise(new GamePlayEvent());
+        GameObject.Find("NLives").transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().text = m_StartLives.ToString();
+        EventManager.Instance.Raise(new GamePlayEvent());
 	}
 
 	private void Pause()
 	{
+        Debug.Log("pause clicked");
+        Cursor.visible = true;
 		SetTimeScale(0);
 		m_GameState = GameState.gamePause;
 		EventManager.Instance.Raise(new GamePauseEvent());
@@ -145,7 +159,17 @@ public class GameManager : Manager<GameManager>
 	private void Resume()
 	{
 		SetTimeScale(1);
+        Cursor.visible = false;
 		m_GameState = GameState.gamePlay;
 		EventManager.Instance.Raise(new GameResumeEvent());
 	}
+    private void PlayerLoose()
+    {
+        SetTimeScale(0);
+        Cursor.visible = true;
+        m_GameState = GameState.gamePause;
+        {
+                EventManager.Instance.Raise(new GameOverEvent());
+        }
+    }
 }

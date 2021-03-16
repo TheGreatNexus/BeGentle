@@ -19,6 +19,9 @@ public class GamePauseEvent : SDD.Events.Event
 public class GameResumeEvent : SDD.Events.Event
 {
 }
+public class GameQuitEvent : SDD.Events.Event
+{
+}
 public class GameStatisticsChangedEvent : SDD.Events.Event
 {
     public int eNLives { get; set; }
@@ -36,6 +39,9 @@ public class ResumeButtonClickedEvent : SDD.Events.Event
 {
 }
 public class MainMenuButtonClickedEvent : SDD.Events.Event
+{
+}
+public class QuitButtonClickedEvent : SDD.Events.Event
 {
 }
 #endregion
