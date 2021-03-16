@@ -85,7 +85,7 @@ public class GameManager : Manager<GameManager>
 
     private void PlayerHasAttacked(PlayerHasAttackedEvent e)
     {
-        Debug.Log("Has Attacked");
+        //Debug.Log("Has Attacked");
     }
 
 	//EVENTS
