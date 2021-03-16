@@ -828,7 +828,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 310033724}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2147,11 +2147,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_DoNotDestroyGameObjectOnLoad: 0
-  m_TxtNLives: {fileID: 0}
+  m_TxtNLives: {fileID: 1741755697}
   m_TxtScore: {fileID: 0}
-  m_Life1: {fileID: 0}
-  m_Life2: {fileID: 0}
-  m_Life3: {fileID: 0}
+  m_Life1: {fileID: 958193224}
+  m_Life2: {fileID: 1477152419}
+  m_Life3: {fileID: 127032665}
 --- !u!1 &718657232
 GameObject:
   m_ObjectHideFlags: 0
