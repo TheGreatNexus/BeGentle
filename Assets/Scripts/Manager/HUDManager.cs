@@ -11,7 +11,7 @@ public class HUDManager : Manager<HUDManager>
 	[Header("HudManager")]
 	[Header("Texts")]
 	[SerializeField] private Text m_TxtNLives;
-	[SerializeField] private Text m_TxtScore;
+	//[SerializeField] private Text m_TxtScore;
 
 	[SerializeField] private GameObject m_Life1;
 	[SerializeField] private GameObject m_Life2;
