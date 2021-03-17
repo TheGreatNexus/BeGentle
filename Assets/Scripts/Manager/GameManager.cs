@@ -74,7 +74,7 @@ public class GameManager : Manager<GameManager>
 	#region Manager implementation
 	protected override IEnumerator InitCoroutine()
 	{
-		Menu();
+		Play();
 		//EventManager.Instance.Raise(new GameStatisticsChangedEvent() { eBestScore = BestScore, eScore = 0, eNLives = 0, eNEnemiesLeftBeforeVictory = 0 });
 		yield break;
 	}
