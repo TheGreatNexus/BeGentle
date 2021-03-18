@@ -76,12 +76,12 @@ public class SpawnController : MonoBehaviour
             case 2:
                 m_SpawnX = Random.Range(m_Zone2.transform.position.x + (m_Zone2.GetComponent<BoxCollider>().size.x / 2), m_Zone2.transform.position.x - (m_Zone2.GetComponent<BoxCollider>().size.x / 2));
                 m_SpawnZ = Random.Range(m_Zone2.transform.position.z + (m_Zone2.GetComponent<BoxCollider>().size.z / 2), m_Zone2.transform.position.z - (m_Zone2.GetComponent<BoxCollider>().size.z / 2));
-                m_SpawnY = 5;
+                m_SpawnY = 3;
                 break;
             case 3:
                 m_SpawnX = Random.Range(m_Zone3.transform.position.x + (m_Zone3.GetComponent<BoxCollider>().size.x / 2), m_Zone3.transform.position.x - (m_Zone3.GetComponent<BoxCollider>().size.x / 2));
                 m_SpawnZ = Random.Range(m_Zone3.transform.position.z + (m_Zone3.GetComponent<BoxCollider>().size.z / 2), m_Zone3.transform.position.z - (m_Zone3.GetComponent<BoxCollider>().size.z / 2));
-                m_SpawnY = 5;
+                m_SpawnY = 3;
                 break;
             case 4:
                 m_SpawnX = Random.Range(m_Zone4.transform.position.x + (m_Zone4.GetComponent<BoxCollider>().size.x / 2), m_Zone4.transform.position.x - (m_Zone4.GetComponent<BoxCollider>().size.x / 2));
