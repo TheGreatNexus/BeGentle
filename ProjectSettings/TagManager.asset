@@ -6,6 +6,8 @@ TagManager:
   tags:
   - PlayerSword
   - Enemy
+  - Ground
+  - Wall
   layers:
   - Default
   - TransparentFX
@@ -16,7 +18,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - SpawningZone
   - 
   - 
   - 

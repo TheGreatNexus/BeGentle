@@ -9,7 +9,7 @@ public class Enemy : MonoBehaviour, IHit
     public float m_enemyHp = 30;
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (m_enemyHp <= 0)
         {
@@ -19,12 +19,12 @@ public class Enemy : MonoBehaviour, IHit
 
     public void Hit(float damage)
     {
-         if (Time.time > m_NextHit)
+         if (Time.fixedTime > m_NextHit)
          {   Debug.Log(m_enemyHp);
-             m_NextHit = Time.time + m_CooldownHit;
+             m_NextHit = Time.fixedTime + m_CooldownHit;
             m_enemyHp -= damage;
          }else{
-             Debug.Log("Time : " + Time.time + "\nNext Hit Time : " + m_NextHit);
+             Debug.Log("Time : " + Time.fixedTime + "\nNext Hit Time : " + m_NextHit);
              Debug.Log(m_enemyHp);
          }
     }
