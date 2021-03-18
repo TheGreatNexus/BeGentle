@@ -74,7 +74,7 @@ public class GameManager : Manager<GameManager>
 	#region Manager implementation
 	protected override IEnumerator InitCoroutine()
 	{
-		Play();
+		Menu();
 		//EventManager.Instance.Raise(new GameStatisticsChangedEvent() { eBestScore = BestScore, eScore = 0, eNLives = 0, eNEnemiesLeftBeforeVictory = 0 });
 		yield break;
 	}
@@ -143,7 +143,7 @@ public class GameManager : Manager<GameManager>
         Cursor.visible = false;
 		SetTimeScale(1);
 		m_GameState = GameState.gamePlay;
-        GameObject.Find("NLives").transform.GetChild(1).GetComponent<UnityEngine.UI.Text>().text = m_StartLives.ToString();
+        GameObject.Find("NbLife").transform.GetChild(0).GetComponent<UnityEngine.UI.Text>().text = m_StartLives.ToString();
         EventManager.Instance.Raise(new GamePlayEvent());
 	}
 

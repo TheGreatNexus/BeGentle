@@ -6,6 +6,9 @@ TagManager:
   tags:
   - PlayerSword
   - Enemy
+  - Ground
+  - Wall
+  - SpawnChecker
   layers:
   - Default
   - TransparentFX

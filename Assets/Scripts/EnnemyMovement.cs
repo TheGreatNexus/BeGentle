@@ -9,14 +9,14 @@ public class EnnemyMovement : MonoBehaviour
     public NavMeshAgent agent;
     //[SerializeField] private Object player;
     //[SerializeField] private Vector3 playerlocation;
-    [SerializeField] private GameObject player;
+    private GameObject player;
     //private Vector3 playerlocation;
     // Start is called before the first frame update
     void Start()
     {
         //        playerlocation = player.transform.postion;
 
-        
+        player = GameObject.Find("Player");
         
         
     }

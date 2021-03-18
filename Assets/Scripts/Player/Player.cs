@@ -37,7 +37,7 @@ public class Player : MonoBehaviour
     void FixedUpdate(){
         RaycastHit r_Hit;
         // Does the ray intersect any objects excluding the player layer
-        if (Physics.Raycast(new Vector3(transform.position.x,(transform.position.y)+1,transform.position.z), transform.TransformDirection(Vector3.forward), out r_Hit, m_Range*0.01f)&& r_Hit.transform.tag=="Enemy") //&& m_Anim.GetBool("isAttacking")==true)
+        if (Physics.Raycast(new Vector3(transform.position.x,(transform.position.y)+1,transform.position.z), transform.TransformDirection(Vector3.forward), out r_Hit, m_Range*0.01f)&& r_Hit.transform.tag=="Enemy" && m_Anim.GetBool("isAttacking")==true)
         {
             Debug.DrawRay(new Vector3(transform.position.x, (transform.position.y) + 1, transform.position.z), transform.TransformDirection(Vector3.forward) * 200, Color.yellow);
            r_Hit.collider.gameObject.GetComponent<IHit>().Hit(m_PlayerDamages);
@@ -45,7 +45,7 @@ public class Player : MonoBehaviour
          else
          {
              Debug.DrawRay(new Vector3(transform.position.x, (transform.position.y) + 1, transform.position.z), transform.TransformDirection(Vector3.forward) * 1000, Color.white);
-             Debug.Log("Did not Hit");
+             //Debug.Log("Did not Hit");
          }
     }
 
