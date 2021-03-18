@@ -48,10 +48,9 @@ public class SpawnController : MonoBehaviour
 
     private void trySpawn(float x, float y, float z)
     {
-        Collider[] hitColliders = Physics.OverlapBox(new Vector3(x, y, z), new Vector3(3, 1, 3), Quaternion.identity);
-        if (hitColliders == null)
+        Collider[] hitColliders = Physics.OverlapBox(new Vector3(x, y, z), new Vector3(3, 1, 3), Quaternion.identity, 1 << 8);
+        if (hitColliders.Length != 0)
         {
-            Debug.Log("in an obstacle");
             if (hitColliders[0].tag == "Ground")
             {
                 m_SpawnY += 1;
@@ -63,17 +62,18 @@ public class SpawnController : MonoBehaviour
                 if (m_SpawnZ > m_MainZone.GetComponent<BoxCollider>().size.z / 2) { m_SpawnZ -= 1; } else { m_SpawnZ -= 1; }
                 trySpawn(m_SpawnX, m_SpawnY, m_SpawnZ);
             }
-        }else{
-            spawnF(m_SpawnX,m_SpawnY,m_SpawnZ);
+        }
+        else
+        {
+            spawnF(m_SpawnX, m_SpawnY, m_SpawnZ);
         }
 
     }
 
     private void spawnF(float x, float y, float z)
     {
-        m_SpawnName = "GoblinEnemy";
         m_CooldownSpawn = Random.Range(5, 15);
         m_NextSpawn = Time.fixedTime + m_CooldownSpawn;
-        Instantiate(GoblinEnemy,new Vector3(x,y,z),Quaternion.identity);
+        Instantiate(GoblinEnemy, new Vector3(x, y, z), Quaternion.identity);
     }
 }
