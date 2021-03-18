@@ -17,6 +17,10 @@ public class SpawnController : MonoBehaviour
     private GameObject m_Spawn;
     private string m_SpawnName;
     private GameObject m_MainZone;
+    private GameObject m_Zone1;
+    private GameObject m_Zone2;
+    private GameObject m_Zone3;
+    private GameObject m_Zone4;
 
     //Prefab value
     [SerializeField] GameObject GoblinEnemy;
@@ -27,6 +31,28 @@ public class SpawnController : MonoBehaviour
     void Start()
     {
         m_MainZone = GameObject.Find("MainZone");
+        m_Zone1 = GameObject.Find("Zone1");
+        m_Zone2 = GameObject.Find("Zone2");
+        m_Zone3 = GameObject.Find("Zone3");
+        m_Zone4 = GameObject.Find("Zone4");
+    }
+    void Update(){
+        if (Input.GetKeyDown(KeyCode.Keypad1))
+        {
+            spawnZone(1);
+        }
+        if (Input.GetKeyDown(KeyCode.Keypad2))
+        {
+            spawnZone(2);
+        }
+        if (Input.GetKeyDown(KeyCode.Keypad3))
+        {
+            spawnZone(3);
+        }
+        if (Input.GetKeyDown(KeyCode.Keypad4))
+        {
+            spawnZone(4);
+        }
     }
 
     // Update is called once per frame
@@ -36,6 +62,36 @@ public class SpawnController : MonoBehaviour
         {
             spawnMain();
         }
+    }
+
+    private void spawnZone(int zoneNb)
+    {
+        switch (zoneNb)
+        {
+            case 1:
+                m_SpawnX = Random.Range(m_Zone1.transform.position.x + (m_Zone1.GetComponent<BoxCollider>().size.x / 2), m_Zone1.transform.position.x - (m_Zone1.GetComponent<BoxCollider>().size.x / 2));
+                m_SpawnZ = Random.Range(m_Zone1.transform.position.z + (m_Zone1.GetComponent<BoxCollider>().size.z / 2), m_Zone1.transform.position.z - (m_Zone1.GetComponent<BoxCollider>().size.z / 2));
+                m_SpawnY = 5;
+                break;
+            case 2:
+                m_SpawnX = Random.Range(m_Zone2.transform.position.x + (m_Zone2.GetComponent<BoxCollider>().size.x / 2), m_Zone2.transform.position.x - (m_Zone2.GetComponent<BoxCollider>().size.x / 2));
+                m_SpawnZ = Random.Range(m_Zone2.transform.position.z + (m_Zone2.GetComponent<BoxCollider>().size.z / 2), m_Zone2.transform.position.z - (m_Zone2.GetComponent<BoxCollider>().size.z / 2));
+                m_SpawnY = 5;
+                break;
+            case 3:
+                m_SpawnX = Random.Range(m_Zone3.transform.position.x + (m_Zone3.GetComponent<BoxCollider>().size.x / 2), m_Zone3.transform.position.x - (m_Zone3.GetComponent<BoxCollider>().size.x / 2));
+                m_SpawnZ = Random.Range(m_Zone3.transform.position.z + (m_Zone3.GetComponent<BoxCollider>().size.z / 2), m_Zone3.transform.position.z - (m_Zone3.GetComponent<BoxCollider>().size.z / 2));
+                m_SpawnY = 5;
+                break;
+            case 4:
+                m_SpawnX = Random.Range(m_Zone4.transform.position.x + (m_Zone4.GetComponent<BoxCollider>().size.x / 2), m_Zone4.transform.position.x - (m_Zone4.GetComponent<BoxCollider>().size.x / 2));
+                m_SpawnZ = Random.Range(m_Zone4.transform.position.z + (m_Zone4.GetComponent<BoxCollider>().size.z / 2), m_Zone4.transform.position.z - (m_Zone4.GetComponent<BoxCollider>().size.z / 2));
+                m_SpawnY = 5;
+                break;
+            default:
+                break;
+        }
+        spawnF(m_SpawnX,m_SpawnY,m_SpawnZ);
     }
 
     private void spawnMain()
@@ -66,14 +122,14 @@ public class SpawnController : MonoBehaviour
         else
         {
             spawnF(m_SpawnX, m_SpawnY, m_SpawnZ);
+            m_CooldownSpawn = Random.Range(5, 15);
+            m_NextSpawn = Time.fixedTime + m_CooldownSpawn;
         }
 
     }
 
     private void spawnF(float x, float y, float z)
     {
-        m_CooldownSpawn = Random.Range(5, 15);
-        m_NextSpawn = Time.fixedTime + m_CooldownSpawn;
         Instantiate(GoblinEnemy, new Vector3(x, y, z), Quaternion.identity);
     }
 }
