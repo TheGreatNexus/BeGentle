@@ -29,10 +29,14 @@ public class Player : MonoBehaviour
     {
         if(Input.GetButtonDown("Fire1")){
             m_Anim.SetBool("isAttacking",true);
-            EventManager.Instance.Raise(new PlayerHasTouchAudioEvent());
         }
         else if(Input.GetButtonUp("Fire1")){
             m_Anim.SetBool("isAttacking", false);
+        }
+        if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
+        {
+            EventManager.Instance.Raise(new PlayerHasHitAudioEvent());
+            ;
         }
     }
 
@@ -43,7 +47,7 @@ public class Player : MonoBehaviour
         {
             Debug.DrawRay(new Vector3(transform.position.x, (transform.position.y) + 1, transform.position.z), transform.TransformDirection(Vector3.forward) * 200, Color.yellow);
            r_Hit.collider.gameObject.GetComponent<IHit>().Hit(m_PlayerDamages);
-            EventManager.Instance.Raise(new PlayerHasTouchAudioEvent());
+            EventManager.Instance.Raise(new PlayerHasHitAudioEvent());
         }
          else
          {

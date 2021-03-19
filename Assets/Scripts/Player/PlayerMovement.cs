@@ -7,6 +7,8 @@ using SDD.Events;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour{
 
+    AudioSource _aPlayerWalking;
+
 // Camera obj
     [SerializeField] private Camera cam;
 
