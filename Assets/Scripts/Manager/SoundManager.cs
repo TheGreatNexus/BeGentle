@@ -15,7 +15,7 @@ public class SoundManager : Manager<SoundManager>
     {
         base.SubscribeEvents();
         // EventManager.Instance.AddListener<PlayerHasBeenHitAudioEvent>(PlayerHasBeenHit);
-        // EventManager.Instance.AddListener<PlayerHasMissHitAudioEvent>(PlayerHasMissHit);
+        EventManager.Instance.AddListener<PlayerHasMissHitAudioEvent>(PlayerHasMissHit);
         // EventManager.Instance.AddListener<EnemyHasBeenHitEvent>(EnemyHasBeenHit);
         EventManager.Instance.AddListener<PlayerHasHitAudioEvent>(PlayerHasHit);
         EventManager.Instance.AddListener<PlayerWalkingAudioEvent>(PlayerWalking);
@@ -26,7 +26,7 @@ public class SoundManager : Manager<SoundManager>
     {
         base.UnsubscribeEvents();
         // EventManager.Instance.RemoveListener<PlayerHasBeenHitAudioEvent>(PlayerHasBeenHit);
-        // EventManager.Instance.RemoveListener<PlayerHasMissHitAudioEvent>(PlayerHasMissHit);
+        EventManager.Instance.RemoveListener<PlayerHasMissHitAudioEvent>(PlayerHasMissHit);
         // EventManager.Instance.RemoveListener<EnemyHasBeenHitEvent>(EnemyHasBeenHit);
         EventManager.Instance.RemoveListener<PlayerHasHitAudioEvent>(PlayerHasHit);
       
