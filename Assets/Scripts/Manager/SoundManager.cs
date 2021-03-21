@@ -15,50 +15,89 @@ public class SoundManager : Manager<SoundManager>
     {
         base.SubscribeEvents();
         // EventManager.Instance.AddListener<PlayerHasBeenHitAudioEvent>(PlayerHasBeenHit);
-        EventManager.Instance.AddListener<PlayerHasMissHitAudioEvent>(PlayerHasMissHit);
+        // EventManager.Instance.AddListener<PlayerHasMissHitAudioEvent>(PlayerHasMissHit);
+        // EventManager.Instance.AddListener<EnemyHasBeenHitEvent>(EnemyHasBeenHit);
         EventManager.Instance.AddListener<PlayerHasHitAudioEvent>(PlayerHasHit);
         EventManager.Instance.AddListener<PlayerWalkingAudioEvent>(PlayerWalking);
         EventManager.Instance.AddListener<PlayerStoppedWalkingAudioEvent>(PlayerStoppedWalking);
-        // EventManager.Instance.AddListener<EnemyHasBeenHitEvent>(EnemyHasBeenHit);
+        
     }
     public override void UnsubscribeEvents()
     {
         base.UnsubscribeEvents();
-        //    EventManager.Instance.RemoveListener<PlayerHasBeenHitAudioEvent>(PlayerHasBeenHit);
+        // EventManager.Instance.RemoveListener<PlayerHasBeenHitAudioEvent>(PlayerHasBeenHit);
+        // EventManager.Instance.RemoveListener<PlayerHasMissHitAudioEvent>(PlayerHasMissHit);
+        // EventManager.Instance.RemoveListener<EnemyHasBeenHitEvent>(EnemyHasBeenHit);
         EventManager.Instance.RemoveListener<PlayerHasHitAudioEvent>(PlayerHasHit);
-        EventManager.Instance.RemoveListener<PlayerHasMissHitAudioEvent>(PlayerHasMissHit);
+      
         EventManager.Instance.RemoveListener<PlayerWalkingAudioEvent>(PlayerWalking);
         EventManager.Instance.RemoveListener<PlayerStoppedWalkingAudioEvent>(PlayerStoppedWalking);
-        // EventManager.Instance.RemoveListener<EnemyHasBeenHitEvent>(EnemyHasBeenHit);
+        
     }
     [SerializeField] AudioClip PlayerHasHitAudio;
     [SerializeField] AudioClip PlayerHasMissHitAudio;
     [SerializeField] AudioClip PlayerWalkingAudio;
 
-    /*   private void PlayerHasBeenHit(PlayerHasBeenHitAudioEvent e)
-       {
-           GameObject PlayerHasBeenHitGO = GameObject.Find("PlayerHasBeenHit");
-           AudioSource audioSource = PlayerHasBeenHitGO.GetComponent<AudioSource>();
-           audioSource.PlayOneShot(PlayerHitAudio, 0.2f);
-       }*/
 
-    private void PlayerHasMissHit(PlayerHasMissHitAudioEvent e)
+  private void PlayerHasMissHit(PlayerHasMissHitAudioEvent e)
     {
-        GameObject PlayerHasMissHitGO = GameObject.Find("PlayerHasMissHit");
-        AudioSource audioSource = PlayerHasMissHitGO.GetComponent<AudioSource>();
-        audioSource.PlayOneShot(PlayerHasMissHitAudio, 0.2f);
-    }
+        if (GameObject.Find("PlayerHasMissHitGO") == null)
+        {
+            GameObject PlayerHasMissHitGO = new GameObject("PlayerHasMissHitGO");
+            PlayerHasMissHitGO.transform.parent = GameObject.Find("AudioSources").transform;
+            AudioSource audioSource = PlayerHasMissHitGO.AddComponent<AudioSource>();
+            audioSource.PlayOneShot(PlayerHasMissHitAudio, 1f);
+        }
+        else
+        {
+            GameObject PlayerHasMissHitGO = GameObject.Find("PlayerHasMissHitGO");
+            AudioSource audioSource = PlayerHasMissHitGO.GetComponent<AudioSource>();
+            if (audioSource.isPlaying == false)
+            {
+                audioSource.PlayOneShot(PlayerHasMissHitAudio, 1f);
+            }
+        }
+    } 
 
     private void PlayerWalking(PlayerWalkingAudioEvent e)
     {
-        GameObject PlayerWalkingGO = GameObject.Find("PlayerWalking");
-        AudioSource audioSource = PlayerWalkingGO.GetComponent<AudioSource>();
-        audioSource.PlayOneShot(PlayerWalkingAudio, 0.2f);
+        if (GameObject.Find("PlayerWalkingGO") == null)
+        {
+            GameObject PlayerWalkingGO = new GameObject("PlayerWalkingGO");
+            Debug.Log(PlayerWalkingGO);
+            PlayerWalkingGO.transform.parent = GameObject.Find("AudioSources").transform;
+            AudioSource audioSource = PlayerWalkingGO.AddComponent<AudioSource>();
+            audioSource.PlayOneShot(PlayerWalkingAudio, 1f);
+        }
+        else
+        {
+            GameObject PlayerWalkingGO = GameObject.Find("PlayerWalkingGO");
+            AudioSource audioSource = PlayerWalkingGO.GetComponent<AudioSource>();
+            if (audioSource.isPlaying == false)
+            {
+                audioSource.PlayOneShot(PlayerWalkingAudio, 1f);
+            }
+        }   
     }
 
     private void PlayerStoppedWalking(PlayerStoppedWalkingAudioEvent e)
     {
-
+        if (GameObject.Find("PlayerWalkingGO") == null)
+        {
+            GameObject PlayerWalkingGO = new GameObject("PlayerWalkingGO");
+            Debug.Log(PlayerWalkingGO);
+            PlayerWalkingGO.transform.parent = GameObject.Find("AudioSources").transform;
+            AudioSource audioSource = PlayerWalkingGO.AddComponent<AudioSource>();
+        }
+        else
+        {
+            GameObject PlayerWalkingGO = GameObject.Find("PlayerWalkingGO");
+            AudioSource audioSource = PlayerWalkingGO.GetComponent<AudioSource>();
+            if (audioSource.isPlaying == true)
+            {
+                audioSource.Stop();
+            }
+        }
     }
 
     private void PlayerHasHit(PlayerHasHitAudioEvent e)
@@ -73,7 +112,8 @@ public class SoundManager : Manager<SoundManager>
             audioSource.PlayOneShot(PlayerHasHitAudio, 1f);
         }
         else
-        {   GameObject PlayerHasHitGO = GameObject.Find("PlayerHasHitGO");
+        {  
+            GameObject PlayerHasHitGO = GameObject.Find("PlayerHasHitGO");
             AudioSource audioSource = PlayerHasHitGO.GetComponent<AudioSource>();
             if (audioSource.isPlaying == false)
             {
