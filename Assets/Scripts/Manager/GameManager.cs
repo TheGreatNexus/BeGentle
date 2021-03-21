@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SDD.Events;
+using UnityEngine.SceneManagement;
 
 public enum GameState { gameMenu, gamePlay, gamePause }
 
@@ -83,7 +84,7 @@ public class GameManager : Manager<GameManager>
 	#region Callbacks to Events issued by MenuManager
 	private void MainMenuButtonClicked(MainMenuButtonClickedEvent e)
 	{
-		Menu();
+        SceneManager.LoadScene("MainScene", LoadSceneMode.Single);
 	}
 
 	private void PlayButtonClicked(PlayButtonClickedEvent e)

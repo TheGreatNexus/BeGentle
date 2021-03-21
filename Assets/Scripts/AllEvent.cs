@@ -61,4 +61,24 @@ public class PlayerHasBeenHitAudioEvent : SDD.Events.Event
 
 }
 
+public class PlayerHasHitAudioEvent : SDD.Events.Event
+{
+
+}
+
+public class PlayerHasMissHitAudioEvent : SDD.Events.Event
+{
+
+}
+
+public class PlayerWalkingAudioEvent : SDD.Events.Event
+{
+
+}
+public class PlayerStoppedWalkingAudioEvent : SDD.Events.Event
+{
+
+}
+
+
 #endregion

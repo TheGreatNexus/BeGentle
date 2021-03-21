@@ -7,6 +7,8 @@ using SDD.Events;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour{
 
+    AudioSource _aPlayerWalking;
+
 // Camera obj
     [SerializeField] private Camera cam;
 
@@ -62,8 +64,8 @@ public class PlayerMovement : MonoBehaviour{
         m_xRot = Input.GetAxisRaw("Mouse Y");
 
         m_cameraRotation = new Vector3(m_xRot, 0, 0) * m_PlayerSensitivity;
-
     }
+
 
     void FixedUpdate(){
         m_Rigidbody.MovePosition(m_Rigidbody.position + m_velocity * Time.fixedDeltaTime);

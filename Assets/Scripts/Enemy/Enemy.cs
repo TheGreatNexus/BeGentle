@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour, IHit
 {
-    float m_CooldownHit = 1f;
+    float m_CooldownHit = 0.1f;
     float m_NextHit = 0;
     public float m_enemyHp = 30;
 
