@@ -30,6 +30,8 @@ public class GameManager : Manager<GameManager>
 
 	private int m_StartLives = 3;
 	public int NLives { get { return m_StartLives; } }
+	private int m_Objectif = 10;
+	private int m_CurrentKillCount=0;
 	void DecrementNLives(int decrement)
 	{
 		SetNLives(m_StartLives - decrement);
@@ -56,6 +58,7 @@ public class GameManager : Manager<GameManager>
 		EventManager.Instance.AddListener<ResumeButtonClickedEvent>(ResumeButtonClicked);
 		EventManager.Instance.AddListener<EscapeButtonClickedEvent>(EscapeButtonClicked);
         EventManager.Instance.AddListener<QuitButtonClickedEvent>(QuitButtonClicked);
+        EventManager.Instance.AddListener<PlayerHasKilledEnemyEvent>(PlayerHasKilledEnemy);
 	}
 
 	public override void UnsubscribeEvents()
@@ -69,6 +72,7 @@ public class GameManager : Manager<GameManager>
 		EventManager.Instance.RemoveListener<ResumeButtonClickedEvent>(ResumeButtonClicked);
 		EventManager.Instance.RemoveListener<EscapeButtonClickedEvent>(EscapeButtonClicked);
         EventManager.Instance.RemoveListener<QuitButtonClickedEvent>(QuitButtonClicked);
+        EventManager.Instance.RemoveListener<PlayerHasKilledEnemyEvent>(PlayerHasKilledEnemy);
 	}
 	#endregion
 
@@ -84,22 +88,27 @@ public class GameManager : Manager<GameManager>
 	#region Callbacks to Events issued by MenuManager
 	private void MainMenuButtonClicked(MainMenuButtonClickedEvent e)
 	{
+		Cursor.lockState = CursorLockMode.None;
         SceneManager.LoadScene("MainScene", LoadSceneMode.Single);
+        Cursor.lockState = CursorLockMode.None;
 	}
 
 	private void PlayButtonClicked(PlayButtonClickedEvent e)
 	{
 		Play();
+        Cursor.lockState = CursorLockMode.Locked;
 	}
 
 	private void ResumeButtonClicked(ResumeButtonClickedEvent e)
 	{
 		Resume();
+        Cursor.lockState = CursorLockMode.Locked;
 	}
 
 	private void EscapeButtonClicked(EscapeButtonClickedEvent e)
 	{
 		if (IsPlaying)
+            Cursor.lockState = CursorLockMode.None;
 			Pause();
 	}
     private void QuitButtonClicked(QuitButtonClickedEvent e)
@@ -118,6 +127,15 @@ public class GameManager : Manager<GameManager>
             PlayerLoose();
 		}
 	}
+
+    private void PlayerHasKilledEnemy(PlayerHasKilledEnemyEvent e)
+    {
+        m_CurrentKillCount +=1;
+        if (m_CurrentKillCount == m_Objectif)
+        {
+            PlayerWin();
+        }
+    }
 	#endregion
 
 	private void PlayerHasAttacked(PlayerHasAttackedEvent e)
@@ -166,11 +184,23 @@ public class GameManager : Manager<GameManager>
 	}
     private void PlayerLoose()
     {
+        Cursor.lockState = CursorLockMode.None;
         SetTimeScale(0);
         Cursor.visible = true;
         m_GameState = GameState.gamePause;
         {
                 EventManager.Instance.Raise(new GameOverEvent());
+        }
+    }
+
+    private void PlayerWin()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        SetTimeScale(0);
+        Cursor.visible = true;
+        m_GameState = GameState.gamePause;
+        {
+            EventManager.Instance.Raise(new GameOverEvent());
         }
     }
 }

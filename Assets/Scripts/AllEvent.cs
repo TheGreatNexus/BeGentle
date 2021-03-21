@@ -55,6 +55,9 @@ public class PlayerHasBeenHitEvent : SDD.Events.Event
 {
     public Player ePlayer;
 }
+public class PlayerHasKilledEnemyEvent : SDD.Events.Event
+{
+}
 
 public class PlayerHasBeenHitAudioEvent : SDD.Events.Event
 {

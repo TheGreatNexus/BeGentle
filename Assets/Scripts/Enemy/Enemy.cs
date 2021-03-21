@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SDD.Events;
 
 public class Enemy : MonoBehaviour, IHit
 {
@@ -13,6 +14,7 @@ public class Enemy : MonoBehaviour, IHit
     {
         if (m_enemyHp <= 0)
         {
+            EventManager.Instance.Raise(new PlayerHasKilledEnemyEvent());
             Destroy(gameObject);
         }
     }
