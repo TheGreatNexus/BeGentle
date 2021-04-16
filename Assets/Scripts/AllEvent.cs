@@ -26,6 +26,10 @@ public class GameStatisticsChangedEvent : SDD.Events.Event
 {
     public int eNLives { get; set; }
 }
+public class GameObjectiveChangedEvent : SDD.Events.Event
+{
+    public int eNObjective { get; set; }
+}
 #endregion
 
 #region MenuManager Events

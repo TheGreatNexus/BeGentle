@@ -11,6 +11,7 @@ public class HUDManager : Manager<HUDManager>
 	[Header("HudManager")]
 	[Header("Texts")]
 	[SerializeField] private Text m_TxtNLives;
+    [SerializeField] private Text m_TxtNObjective;
 	//[SerializeField] private Text m_TxtScore;
 
 	[SerializeField] private GameObject m_Life1;
@@ -41,5 +42,10 @@ public class HUDManager : Manager<HUDManager>
             m_Life1.SetActive(false);
         }
 	}
+
+    protected override void GameObjectiveChanged(GameObjectiveChangedEvent e)
+    {
+		m_TxtNObjective.text = "Objective : " + e.eNObjective.ToString();
+    }
 	#endregion
 }
