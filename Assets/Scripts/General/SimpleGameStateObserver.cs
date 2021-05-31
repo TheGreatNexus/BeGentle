@@ -11,6 +11,7 @@ public abstract class SimpleGameStateObserver : MonoBehaviour, IEventHandler
 		EventManager.Instance.AddListener<GameMenuEvent>(GameMenu);
 		EventManager.Instance.AddListener<GamePlayEvent>(GamePlay);
 		EventManager.Instance.AddListener<GameOverEvent>(GameOver);
+        EventManager.Instance.AddListener<WinEvent>(Win);
 		EventManager.Instance.AddListener<GamePauseEvent>(GamePause);
 		EventManager.Instance.AddListener<GameResumeEvent>(GameResume);
         EventManager.Instance.AddListener<GameQuitEvent>(GameQuit);
@@ -24,6 +25,7 @@ public abstract class SimpleGameStateObserver : MonoBehaviour, IEventHandler
 		EventManager.Instance.RemoveListener<GameMenuEvent>(GameMenu);
 		EventManager.Instance.RemoveListener<GamePlayEvent>(GamePlay);
 		EventManager.Instance.RemoveListener<GameOverEvent>(GameOver);
+        EventManager.Instance.RemoveListener<WinEvent>(Win);
 		EventManager.Instance.RemoveListener<GamePauseEvent>(GamePause);
 		EventManager.Instance.RemoveListener<GameResumeEvent>(GameResume);
         EventManager.Instance.RemoveListener<GameQuitEvent>(GameQuit);
@@ -54,7 +56,12 @@ public abstract class SimpleGameStateObserver : MonoBehaviour, IEventHandler
 	{
 	}
 
-	protected virtual void GamePause(GamePauseEvent e)
+    protected virtual void Win(WinEvent e)
+    {
+    }
+
+
+    protected virtual void GamePause(GamePauseEvent e)
 	{
 	}
 

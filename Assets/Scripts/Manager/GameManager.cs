@@ -200,8 +200,6 @@ public class GameManager : Manager<GameManager>
         SetTimeScale(0);
         Cursor.visible = true;
         m_GameState = GameState.gamePause;
-        {
-            EventManager.Instance.Raise(new GameOverEvent());
-        }
+        EventManager.Instance.Raise(new WinEvent());
     }
 }

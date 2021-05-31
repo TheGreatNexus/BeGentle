@@ -13,6 +13,9 @@ public class GamePlayEvent : SDD.Events.Event
 public class GameOverEvent : SDD.Events.Event
 {
 }
+public class WinEvent : SDD.Events.Event
+{
+}
 public class GamePauseEvent : SDD.Events.Event
 {
 }
