@@ -131,6 +131,7 @@ public class GameManager : Manager<GameManager>
     private void PlayerHasKilledEnemy(PlayerHasKilledEnemyEvent e)
     {
         m_CurrentKillCount +=1;
+        EventManager.Instance.Raise(new GameObjectiveChangedEvent() { eNObjective = m_Objectif - m_CurrentKillCount });
         if (m_CurrentKillCount == m_Objectif)
         {
             PlayerWin();
@@ -199,8 +200,6 @@ public class GameManager : Manager<GameManager>
         SetTimeScale(0);
         Cursor.visible = true;
         m_GameState = GameState.gamePause;
-        {
-            EventManager.Instance.Raise(new GameOverEvent());
-        }
+        EventManager.Instance.Raise(new WinEvent());
     }
 }

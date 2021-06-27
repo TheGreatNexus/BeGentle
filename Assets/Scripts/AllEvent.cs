@@ -13,6 +13,9 @@ public class GamePlayEvent : SDD.Events.Event
 public class GameOverEvent : SDD.Events.Event
 {
 }
+public class WinEvent : SDD.Events.Event
+{
+}
 public class GamePauseEvent : SDD.Events.Event
 {
 }
@@ -25,6 +28,10 @@ public class GameQuitEvent : SDD.Events.Event
 public class GameStatisticsChangedEvent : SDD.Events.Event
 {
     public int eNLives { get; set; }
+}
+public class GameObjectiveChangedEvent : SDD.Events.Event
+{
+    public int eNObjective { get; set; }
 }
 #endregion
 
