@@ -5,17 +5,22 @@ using SDD.Events;
 
 public class Player : MonoBehaviour
 {
-    //Cooldown variables
-    float m_CooldownHit = 1;
-    float m_NextHit = 0;
+    private enum walkingState { STOP, WALKING, RUNNING };
+    private enum BattleState { DEFAULT, ATTACKING, HITTING, MISSING, COOLDOWN };
+    private BattleState m_BattleState;
+    private walkingState m_WalkingState;
 
     //Player variables
-    private float m_playerHP;
-    public float m_PlayerDamages;
-    private float m_PlayerCDAttack;
-    private float m_Range = 200;
-    private bool m_IsWalking = false;
-    private bool m_NextClicked = true;
+    [SerializeField] private float m_playerHP;
+    [SerializeField] private float m_PlayerDamages;
+    [SerializeField] private float m_PlayerCDAttack;
+    [SerializeField] private float m_Range = 200;
+    
+    //Invicibility variables
+    private float m_InvincibilityDuration = 1f;
+    private float m_InvincibilityStarted;
+
+    private bool hasBeenHitRecently;
 
 
     Animator m_Anim;
@@ -24,62 +29,101 @@ public class Player : MonoBehaviour
     {
         m_Anim = GetComponentInChildren<Animator>();
         m_PlayerDamages = 10f;
+        m_WalkingState = walkingState.STOP;
+        m_BattleState = BattleState.DEFAULT;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //Attack management
         if (Input.GetButtonDown("Fire1"))
         {
-            m_Anim.SetBool("isAttacking", true);
+            m_BattleState = BattleState.ATTACKING;
+            playerAttacked();
         }
-        else if (Input.GetButtonUp("Fire1"))
-        {
-            m_NextClicked= true;
-            m_Anim.SetBool("isAttacking", false);
-        }
-        if ((Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0) && m_IsWalking == false)
+        //Sound management
+        if ((Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0) && m_WalkingState == walkingState.STOP)
         {
             EventManager.Instance.Raise(new PlayerWalkingAudioEvent());
-            m_IsWalking = true;
+            m_WalkingState = walkingState.RUNNING;
         }
-        if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0 && m_IsWalking == true)
+        if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0 && m_WalkingState == walkingState.RUNNING)
         {
             EventManager.Instance.Raise(new PlayerStoppedWalkingAudioEvent());
-            m_IsWalking = false;
+            m_WalkingState = walkingState.STOP;
         }
+        //hasBeenHitRecentlyManagement
+        if(Time.time> m_InvincibilityStarted + m_InvincibilityDuration){
+            hasBeenHitRecently = false;
+        }
+
     }
 
     void FixedUpdate()
     {
+
+    }
+
+    private void playerAttacked()
+    {
+
+        if (m_BattleState != BattleState.ATTACKING) { return; }
         RaycastHit r_Hit;
         // Does the ray intersect any objects excluding the player layer
-        if (Physics.Raycast(new Vector3(transform.position.x, (transform.position.y) + 1, transform.position.z), transform.TransformDirection(Vector3.forward), out r_Hit, m_Range * 0.01f) && r_Hit.transform.tag == "Enemy" && m_Anim.GetBool("isAttacking") == true && m_NextClicked ==true)
+        if (Physics.Raycast(new Vector3(transform.position.x, (transform.position.y) + 1, transform.position.z), transform.TransformDirection(Vector3.forward), out r_Hit, m_Range * 0.01f) && r_Hit.transform.tag == "Enemy")
         {
             Debug.DrawRay(new Vector3(transform.position.x, (transform.position.y) + 1, transform.position.z), transform.TransformDirection(Vector3.forward) * 200, Color.yellow);
-            r_Hit.collider.gameObject.GetComponent<IHit>().Hit(m_PlayerDamages);
-            EventManager.Instance.Raise(new PlayerHasHitAudioEvent());
-            m_NextClicked = false;
+            r_Hit.collider.gameObject.GetComponentInChildren<Enemy>().Hit(m_PlayerDamages);
+            m_BattleState = BattleState.HITTING;
+            attackingAudio();
+            m_BattleState = BattleState.DEFAULT;
         }
         else
         {
             Debug.DrawRay(new Vector3(transform.position.x, (transform.position.y) + 1, transform.position.z), transform.TransformDirection(Vector3.forward) * 1000, Color.white);
-            if (m_Anim.GetBool("isAttacking") == true && m_NextClicked == true)
             {
-                EventManager.Instance.Raise(new PlayerHasMissHitAudioEvent());
-                //Debug.Log("Did not Hit");
+                m_BattleState = BattleState.MISSING;
+                attackingAudio();
+                m_BattleState = BattleState.DEFAULT;
             }
         }
+
     }
 
 
-
-    private void OnTriggerStay(Collider other)
+    private void attackingAudio()
     {
-        if (other.tag == "Enemy" && Time.time > m_NextHit)
+        switch (m_BattleState)
         {
-            m_NextHit = Time.time + m_CooldownHit;
-            EventManager.Instance.Raise(new PlayerHasBeenHitEvent());
+            case BattleState.HITTING:
+                EventManager.Instance.Raise(new PlayerHasHitAudioEvent());
+                break;
+            case BattleState.MISSING:
+                EventManager.Instance.Raise(new PlayerHasMissHitAudioEvent());
+                break;
+            default:
+                break;
         }
+
     }
+
+    public void isHit(int dmg)
+    {
+        if (hasBeenHitRecently == false)
+        {
+            m_playerHP -= dmg;
+            hasBeenHitRecently = true;
+            m_InvincibilityStarted = Time.time;
+        }
+
+    }
+    // private void OnTriggerStay(Collider other)
+    // {
+    //     if (other.tag == "Enemy" && Time.time > m_NextHit)
+    //     {
+    //         m_NextHit = Time.time + m_CooldownHit;
+    //         EventManager.Instance.Raise(new PlayerHasBeenHitEvent());
+    //     }
+    // }
 }
