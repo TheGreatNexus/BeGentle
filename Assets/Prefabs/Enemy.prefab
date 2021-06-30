@@ -81,12 +81,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bd681cce5393534cbdbbf5b15951ff6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_AddSalary: 10
+  m_Price: 20
   m_EnemyHp: 30
   m_EnemyDamages: 10
   m_AttackCooldown: 2
   anim: {fileID: 4688666184393568763}
   agent: {fileID: 1187798717914205877}
-  player: {fileID: 0}
+  player: {fileID: 6977602206321128514, guid: fdebb90abdffff441b461505247fb5aa, type: 3}
 --- !u!1001 &1187798719641848938
 PrefabInstance:
   m_ObjectHideFlags: 0
