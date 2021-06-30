@@ -5,6 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class ButtonsScript : MonoBehaviour
 {
+    void Start(){
+        for (int i = 1; i < Display.displays.Length; i++)
+        {
+            Display.displays[i].Activate();
+        }
+    }
     public void PlayButton()
     {
         SceneManager.LoadScene("ScaleMap", LoadSceneMode.Single);

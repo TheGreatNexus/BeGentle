@@ -73,6 +73,8 @@ public class Enemy : MonoBehaviour, IHit
             if (r_Hit.collider.gameObject.tag == "Player")
             {
                 EventManager.Instance.Raise(new PlayerHasBeenHitEvent() { eDamages = m_EnemyDamages });
+                anim.SetBool("canAttack", false);
+                m_NextAttack = Time.time + m_AttackCooldown;
             }
 
         }
@@ -80,8 +82,6 @@ public class Enemy : MonoBehaviour, IHit
         {
             print("error");
         }
-        anim.SetBool("canAttack", false);
-        m_NextAttack = Time.time + m_AttackCooldown;
     }
 
     //When the enemy is hit
@@ -108,7 +108,7 @@ public class Enemy : MonoBehaviour, IHit
             agent.enabled = false;
             transform.position = new Vector3(transform.position.x,transform.position.y-0.5f,transform.position.z);
             EventManager.Instance.Raise(new PlayerHasKilledEnemyEvent());
-            Destroy(gameObject, 3f);
+            Destroy(transform.parent.gameObject, 3f);
         }
     }
 }
