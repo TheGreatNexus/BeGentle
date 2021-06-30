@@ -16,19 +16,16 @@ public class Player : MonoBehaviour
     [SerializeField] private float m_PlayerDamages;
     [SerializeField] private float m_PlayerCDAttack;
     [SerializeField] private float m_Range = 200;
+    [SerializeField] private Animator anim;
     
     //Invicibility variables
     private float m_InvincibilityDuration = 1f;
     private float m_InvincibilityStarted;
 
     private bool hasBeenHitRecently;
-
-
-    Animator m_Anim;
     // Start is called before the first frame update
     void Start()
     {
-        m_Anim = GetComponentInChildren<Animator>();
         m_PlayerDamages = 10f;
         m_WalkingState = walkingState.STOP;
         m_BattleState = BattleState.DEFAULT;
@@ -41,7 +38,7 @@ public class Player : MonoBehaviour
         if (Input.GetButtonDown("Fire1"))
         {
             m_BattleState = BattleState.ATTACKING;
-            playerAttacked();
+            anim.SetTrigger("HasAttacked");
         }
         //Sound management
         if ((Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0) && m_WalkingState == walkingState.STOP)
@@ -66,7 +63,7 @@ public class Player : MonoBehaviour
 
     }
 
-    private void playerAttacked()
+    public void playerAttacked()
     {
 
         if (m_BattleState != BattleState.ATTACKING) { return; }
