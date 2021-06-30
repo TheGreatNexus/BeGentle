@@ -67,7 +67,8 @@ public class MenuManager : Manager<MenuManager>
 
 	public void PlayButtonHasBeenClicked()
 	{
-		EventManager.Instance.Raise(new PlayButtonClickedEvent());
+		//EventManager.Instance.Raise(new PlayButtonClickedEvent());
+		AudioSource audioSource = GameObject.Find("Validation").GetComponent<AudioSource>();
 	}
 
 	public void ResumeButtonHasBeenClicked()
@@ -81,8 +82,9 @@ public class MenuManager : Manager<MenuManager>
 	}
     public void QuitButtonHasBeenClicked()
     {
-        EventManager.Instance.Raise(new QuitButtonClickedEvent());
-    }
+		EventManager.Instance.Raise(new QuitButtonClickedEvent());
+		AudioSource audioSource = GameObject.Find("Validation").GetComponent<AudioSource>();
+	}
 	#endregion
 
 	#region Callbacks to GameManager events
