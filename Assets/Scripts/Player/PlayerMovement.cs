@@ -41,8 +41,7 @@ public class PlayerMovement : MonoBehaviour
     }
     void Start()
     {
-        m_PlayerSpeed = 5;
-        m_PlayerSensitivity = 5f;
+        
     }
 
     // Update is called once per frame

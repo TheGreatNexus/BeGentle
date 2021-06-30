@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
 
     //Player variables
     [SerializeField] private float m_playerHP;
+    [SerializeField] private float m_playerMaxHP;
     [SerializeField] private float m_PlayerDamages;
     [SerializeField] private float m_PlayerCDAttack;
     [SerializeField] private float m_Range = 200;
@@ -74,7 +75,7 @@ public class Player : MonoBehaviour
         if (Physics.Raycast(new Vector3(transform.position.x, (transform.position.y) + 1, transform.position.z), transform.TransformDirection(Vector3.forward), out r_Hit, m_Range * 0.01f) && r_Hit.transform.tag == "Enemy")
         {
             Debug.DrawRay(new Vector3(transform.position.x, (transform.position.y) + 1, transform.position.z), transform.TransformDirection(Vector3.forward) * 200, Color.yellow);
-            r_Hit.collider.gameObject.GetComponentInChildren<Enemy>().Hit(m_PlayerDamages);
+            EventManager.Instance.Raise(new EnemyHasBeenHitEvent(){eDamages = m_PlayerDamages, eEnemy = r_Hit.collider.gameObject});
             m_BattleState = BattleState.HITTING;
             attackingAudio();
             m_BattleState = BattleState.DEFAULT;
@@ -108,7 +109,7 @@ public class Player : MonoBehaviour
 
     }
 
-    public void isHit(int dmg)
+    public void isHit(float dmg)
     {
         if (hasBeenHitRecently == false)
         {
@@ -117,6 +118,10 @@ public class Player : MonoBehaviour
             m_InvincibilityStarted = Time.time;
         }
 
+    }
+
+    public float getPlayerHp(){
+        return m_playerHP;
     }
     // private void OnTriggerStay(Collider other)
     // {

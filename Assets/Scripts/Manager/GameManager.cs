@@ -25,23 +25,12 @@ public class GameManager : Manager<GameManager>
 
 	//Lives
 	//[SerializeField] private int m_NStartLives;
+	[SerializeField] private GameObject player;
 	private GameObject[] gameObjects;
 	private int checkPointNb;
-
-	private int m_StartLives = 3;
-	public int NLives { get { return m_StartLives; } }
 	private int m_Objectif = 10;
 	private int m_CurrentKillCount=0;
-	void DecrementNLives(int decrement)
-	{
-		SetNLives(m_StartLives - decrement);
-	}
 
-	void SetNLives(int nLives)
-	{
-		m_StartLives = nLives;
-		EventManager.Instance.Raise(new GameStatisticsChangedEvent() { eNLives = m_StartLives });
-	}
 	//Players
 	//[SerializeField]
 	//List<PlayerController> m_Players = new List<PlayerController>();
@@ -54,6 +43,8 @@ public class GameManager : Manager<GameManager>
 		//MainMenuManager
 		EventManager.Instance.AddListener<MainMenuButtonClickedEvent>(MainMenuButtonClicked);
 		EventManager.Instance.AddListener<PlayerHasBeenHitEvent>(PlayerHasBeenHit);
+        EventManager.Instance.AddListener<Player2HasSummonedEnemyEvent>(Player2SummonedEnemy);
+        EventManager.Instance.AddListener<EnemyHasBeenHitEvent>(EnemyHasBeenHit);
 		EventManager.Instance.AddListener<PlayButtonClickedEvent>(PlayButtonClicked);
 		EventManager.Instance.AddListener<ResumeButtonClickedEvent>(ResumeButtonClicked);
 		EventManager.Instance.AddListener<EscapeButtonClickedEvent>(EscapeButtonClicked);
@@ -68,6 +59,8 @@ public class GameManager : Manager<GameManager>
 		//MainMenuManager
 		EventManager.Instance.RemoveListener<MainMenuButtonClickedEvent>(MainMenuButtonClicked);
 		EventManager.Instance.RemoveListener<PlayerHasBeenHitEvent>(PlayerHasBeenHit);
+        EventManager.Instance.RemoveListener<Player2HasSummonedEnemyEvent>(Player2SummonedEnemy);
+        EventManager.Instance.RemoveListener<EnemyHasBeenHitEvent>(EnemyHasBeenHit);
 		EventManager.Instance.RemoveListener<PlayButtonClickedEvent>(PlayButtonClicked);
 		EventManager.Instance.RemoveListener<ResumeButtonClickedEvent>(ResumeButtonClicked);
 		EventManager.Instance.RemoveListener<EscapeButtonClickedEvent>(EscapeButtonClicked);
@@ -79,7 +72,7 @@ public class GameManager : Manager<GameManager>
 	#region Manager implementation
 	protected override IEnumerator InitCoroutine()
 	{
-		Menu();
+		Play();
 		//EventManager.Instance.Raise(new GameStatisticsChangedEvent() { eBestScore = BestScore, eScore = 0, eNLives = 0, eNEnemiesLeftBeforeVictory = 0 });
 		yield break;
 	}
@@ -117,16 +110,15 @@ public class GameManager : Manager<GameManager>
     }
 
 	private void PlayerHasBeenHit(PlayerHasBeenHitEvent e)
-	{
-		//EventManager.Instance.Raise(new PlayerHasBeenHitAudioEvent());
-		DecrementNLives(1);
-		//Debug.Log(m_StartLives);
-		EventManager.Instance.Raise(new GameStatisticsChangedEvent() { eNLives = m_StartLives });
-		if (m_StartLives == 0)
-		{
-            PlayerLoose();
-		}
+	{	
+		player.GetComponent<Player>().isHit(e.eDamages);
+		EventManager.Instance.Raise(new GameStatisticsChangedEvent() { eNLives = player.GetComponent<Player>().getPlayerHp()});
 	}
+    private void EnemyHasBeenHit(EnemyHasBeenHitEvent e)
+    {
+        e.eEnemy.GetComponentInChildren<Enemy>().Hit(e.eDamages);
+        //EventManager.Instance.Raise(new GameStatisticsChangedEvent() { eNLives = player.GetComponent<Player>().getPlayerHp() });
+    }
 
     private void PlayerHasKilledEnemy(PlayerHasKilledEnemyEvent e)
     {
@@ -136,6 +128,12 @@ public class GameManager : Manager<GameManager>
         {
             PlayerWin();
         }
+    }
+
+    private void Player2SummonedEnemy(Player2HasSummonedEnemyEvent e)
+    {
+		Debug.Log(e.eEnemyType);
+        Instantiate(e.eEnemyType,e.eSpawnPosition.position,Quaternion.identity);
     }
 	#endregion
 
@@ -163,7 +161,7 @@ public class GameManager : Manager<GameManager>
         Cursor.visible = false;
 		SetTimeScale(1);
 		m_GameState = GameState.gamePlay;
-        GameObject.Find("NbLife").transform.GetChild(0).GetComponent<UnityEngine.UI.Text>().text = m_StartLives.ToString();
+        //GameObject.Find("NbLife").transform.GetChild(0).GetComponent<UnityEngine.UI.Text>().text = m_StartLives.ToString();
         EventManager.Instance.Raise(new GamePlayEvent());
 	}
 
@@ -202,4 +200,6 @@ public class GameManager : Manager<GameManager>
         m_GameState = GameState.gamePause;
         EventManager.Instance.Raise(new WinEvent());
     }
+	
+	
 }
