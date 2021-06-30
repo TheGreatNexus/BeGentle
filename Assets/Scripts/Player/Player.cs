@@ -63,6 +63,12 @@ public class Player : MonoBehaviour
 
     }
 
+    public void boostedStats(){
+        m_PlayerDamages = 1000;
+        m_playerMaxHP = 1000;
+        m_playerHP = 1000;
+        m_Range = 400;
+    }
     public void playerAttacked()
     {
 

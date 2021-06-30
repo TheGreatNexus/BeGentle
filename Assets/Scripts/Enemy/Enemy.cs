@@ -16,9 +16,10 @@ public class Enemy : MonoBehaviour, IHit
     private float m_NextAttack;
     [SerializeField] private Animator anim;
     [SerializeField] private NavMeshAgent agent;
-    [SerializeField] private GameObject player;
+    private GameObject player;
     void Start()
     {
+        player = GameObject.Find("Player");
     }
 
     void Update()
@@ -45,7 +46,14 @@ public class Enemy : MonoBehaviour, IHit
             {
                 agent.enabled = true;
             }
-            agent.SetDestination(player.transform.position);
+            try
+            {
+                agent.SetDestination(player.transform.position);
+            }
+            catch (Exception e)
+            {
+
+            }
         }
         else
         {
@@ -106,9 +114,16 @@ public class Enemy : MonoBehaviour, IHit
         if (m_EnemyHp <= 0)
         {
             agent.enabled = false;
-            transform.position = new Vector3(transform.position.x,transform.position.y-0.5f,transform.position.z);
+            transform.position = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z);
             EventManager.Instance.Raise(new PlayerHasKilledEnemyEvent());
-            Destroy(transform.parent.gameObject, 3f);
+            StartCoroutine(destroyGO());
         }
+    }
+
+    IEnumerator destroyGO()
+    {
+
+        yield return new WaitForSeconds(3);
+        Destroy(transform.parent.gameObject);
     }
 }

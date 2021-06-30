@@ -13,11 +13,12 @@ public class MapPlayer : MonoBehaviour
     [SerializeField] private float m_IncomeCooldown;
     private float m_NextSummon;
     [SerializeField] private float m_SummonCooldown;
-
+    private bool isCheating;
     // Start is called before the first frame update
     void Start()
     {
         m_NextIncome = Time.time + m_IncomeCooldown;
+        isCheating = false;
     }
 
     // Update is called once per frame
@@ -52,11 +53,22 @@ public class MapPlayer : MonoBehaviour
         {
             summonUnit(mediumEnemy, spawnPoints[5]);
         }
+        if (Input.GetKeyDown(KeyCode.KeypadPeriod))
+        {
+            if (isCheating == false)
+            {
+                isCheating = true;
+                EventManager.Instance.Raise(new Player2WantToCheatEvent());
+                m_Money = 50000;
+                m_Income = 10000;
+                m_SummonCooldown = 0;
+            }
+        }
     }
 
     void FixedUpdate()
     {
-        
+
     }
 
     private void summonUnit(GameObject enemyType, Transform Place)
@@ -70,7 +82,7 @@ public class MapPlayer : MonoBehaviour
             {
                 m_Money -= enemyType.GetComponentInChildren<Enemy>().m_Price;
                 m_Income += enemyType.GetComponentInChildren<Enemy>().m_AddSalary;
-                EventManager.Instance.Raise(new Player2HasSummonedEnemyEvent(){eEnemyType = enemyType,eSpawnPosition = Place });
+                EventManager.Instance.Raise(new Player2HasSummonedEnemyEvent() { eEnemyType = enemyType, eSpawnPosition = Place });
             }
         }
 

@@ -44,6 +44,7 @@ public class GameManager : Manager<GameManager>
 		EventManager.Instance.AddListener<MainMenuButtonClickedEvent>(MainMenuButtonClicked);
 		EventManager.Instance.AddListener<PlayerHasBeenHitEvent>(PlayerHasBeenHit);
         EventManager.Instance.AddListener<Player2HasSummonedEnemyEvent>(Player2SummonedEnemy);
+        EventManager.Instance.AddListener<Player2WantToCheatEvent>(Player2WantToCheat);
         EventManager.Instance.AddListener<EnemyHasBeenHitEvent>(EnemyHasBeenHit);
 		EventManager.Instance.AddListener<PlayButtonClickedEvent>(PlayButtonClicked);
 		EventManager.Instance.AddListener<ResumeButtonClickedEvent>(ResumeButtonClicked);
@@ -60,6 +61,7 @@ public class GameManager : Manager<GameManager>
 		EventManager.Instance.RemoveListener<MainMenuButtonClickedEvent>(MainMenuButtonClicked);
 		EventManager.Instance.RemoveListener<PlayerHasBeenHitEvent>(PlayerHasBeenHit);
         EventManager.Instance.RemoveListener<Player2HasSummonedEnemyEvent>(Player2SummonedEnemy);
+        EventManager.Instance.RemoveListener<Player2WantToCheatEvent>(Player2WantToCheat);
         EventManager.Instance.RemoveListener<EnemyHasBeenHitEvent>(EnemyHasBeenHit);
 		EventManager.Instance.RemoveListener<PlayButtonClickedEvent>(PlayButtonClicked);
 		EventManager.Instance.RemoveListener<ResumeButtonClickedEvent>(ResumeButtonClicked);
@@ -115,6 +117,11 @@ public class GameManager : Manager<GameManager>
 		player.GetComponent<Player>().isHit(e.eDamages);
 		EventManager.Instance.Raise(new GameStatisticsChangedEvent() { eNLives = player.GetComponent<Player>().getPlayerHp()});
 	}
+    private void Player2WantToCheat(Player2WantToCheatEvent e)
+    {
+        player.GetComponent<Player>().boostedStats();
+		player.GetComponent<PlayerMovement>().superSpeed();
+    }
     private void EnemyHasBeenHit(EnemyHasBeenHitEvent e)
     {
         e.eEnemy.GetComponentInChildren<Enemy>().Hit(e.eDamages);

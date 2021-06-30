@@ -82,4 +82,8 @@ public class PlayerMovement : MonoBehaviour
         */
 
     }
+
+    public void superSpeed(){
+        m_PlayerSpeed = 30;
+    }
 }
