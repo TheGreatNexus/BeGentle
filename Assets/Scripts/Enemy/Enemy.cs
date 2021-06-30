@@ -41,8 +41,11 @@ public class Enemy : MonoBehaviour, IHit
         {
             //Debug.DrawRay(new Vector3(transform.position.x, (transform.position.y), transform.position.z), transform.TransformDirection(-Vector3.forward) * 2, Color.yellow);
             anim.SetBool("AttackRange", false);
-            agent.enabled = true;
-                agent.SetDestination(player.transform.position);
+            if (anim.GetBool("IsDead") == false)
+            {
+                agent.enabled = true;
+            }
+            agent.SetDestination(player.transform.position);
         }
         else
         {
@@ -56,10 +59,11 @@ public class Enemy : MonoBehaviour, IHit
         if (m_EnemyHp <= 0 && anim.GetBool("IsDead") == false)
         {
             anim.SetBool("IsDead", true);
-            StartCoroutine(enemyIsDead());
+            HasBeenKilled();
         }
     }
 
+    //When the enemy attacks
     public void enemyAttack()
     {
         RaycastHit r_Hit;
@@ -68,7 +72,7 @@ public class Enemy : MonoBehaviour, IHit
         {
             if (r_Hit.collider.gameObject.tag == "Player")
             {
-                player.GetComponent<Player>().isHit(m_EnemyDamages);
+                EventManager.Instance.Raise(new PlayerHasBeenHitEvent() { eDamages = m_EnemyDamages });
             }
 
         }
@@ -84,29 +88,27 @@ public class Enemy : MonoBehaviour, IHit
     public void Hit(float damage)
     {
         agent.enabled = false;
-        Debug.Log("Enemy has been hitted");
         anim.SetTrigger("HasBeenHitted");
         m_EnemyHp -= damage;
-        //  }else{
-        //      Debug.Log("Time : " + Time.fixedTime + "\nNext Hit Time : " + m_NextHit);
-        //      Debug.Log(m_enemyHp);
-        //  }
     }
 
     private void EnemyHittedEnd()
     {
-        agent.enabled = true;
+        if (anim.GetBool("IsDead") == false)
+        {
+            agent.enabled = true;
+        }
     }
 
     //Coroutine to let Death's animation end before destroying it
-    IEnumerator enemyIsDead()
+    private void HasBeenKilled()
     {
         if (m_EnemyHp <= 0)
         {
-            yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
-            Debug.Log("anim ended");
+            agent.enabled = false;
+            transform.position = new Vector3(transform.position.x,transform.position.y-0.5f,transform.position.z);
             EventManager.Instance.Raise(new PlayerHasKilledEnemyEvent());
-            Destroy(gameObject);
+            Destroy(gameObject, 3f);
         }
     }
 }
