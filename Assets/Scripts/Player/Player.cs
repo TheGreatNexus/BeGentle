@@ -15,6 +15,12 @@ public class Player : MonoBehaviour
     [SerializeField] private float m_PlayerDamages;
     [SerializeField] private float m_PlayerCDAttack;
     [SerializeField] private float m_Range = 200;
+    
+    //Invicibility variables
+    private float m_InvincibilityDuration = 1f;
+    private float m_InvincibilityStarted;
+
+    private bool hasBeenHitRecently;
 
 
     Animator m_Anim;
@@ -47,6 +53,11 @@ public class Player : MonoBehaviour
             EventManager.Instance.Raise(new PlayerStoppedWalkingAudioEvent());
             m_WalkingState = walkingState.STOP;
         }
+        //hasBeenHitRecentlyManagement
+        if(Time.time> m_InvincibilityStarted + m_InvincibilityDuration){
+            hasBeenHitRecently = false;
+        }
+
     }
 
     void FixedUpdate()
@@ -56,13 +67,14 @@ public class Player : MonoBehaviour
 
     private void playerAttacked()
     {
+
         if (m_BattleState != BattleState.ATTACKING) { return; }
         RaycastHit r_Hit;
         // Does the ray intersect any objects excluding the player layer
         if (Physics.Raycast(new Vector3(transform.position.x, (transform.position.y) + 1, transform.position.z), transform.TransformDirection(Vector3.forward), out r_Hit, m_Range * 0.01f) && r_Hit.transform.tag == "Enemy")
         {
             Debug.DrawRay(new Vector3(transform.position.x, (transform.position.y) + 1, transform.position.z), transform.TransformDirection(Vector3.forward) * 200, Color.yellow);
-            r_Hit.collider.gameObject.GetComponent<IHit>().Hit(m_PlayerDamages);
+            r_Hit.collider.gameObject.GetComponentInChildren<Enemy>().Hit(m_PlayerDamages);
             m_BattleState = BattleState.HITTING;
             attackingAudio();
             m_BattleState = BattleState.DEFAULT;
@@ -87,11 +99,22 @@ public class Player : MonoBehaviour
             case BattleState.HITTING:
                 EventManager.Instance.Raise(new PlayerHasHitAudioEvent());
                 break;
-            case BattleState.MISSING :
+            case BattleState.MISSING:
                 EventManager.Instance.Raise(new PlayerHasMissHitAudioEvent());
                 break;
             default:
                 break;
+        }
+
+    }
+
+    public void isHit(int dmg)
+    {
+        if (hasBeenHitRecently == false)
+        {
+            m_playerHP -= dmg;
+            hasBeenHitRecently = true;
+            m_InvincibilityStarted = Time.time;
         }
 
     }
