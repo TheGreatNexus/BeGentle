@@ -13,6 +13,9 @@ public class GamePlayEvent : SDD.Events.Event
 public class GameOverEvent : SDD.Events.Event
 {
 }
+public class WinEvent : SDD.Events.Event
+{
+}
 public class GamePauseEvent : SDD.Events.Event
 {
 }
@@ -24,7 +27,11 @@ public class GameQuitEvent : SDD.Events.Event
 }
 public class GameStatisticsChangedEvent : SDD.Events.Event
 {
-    public int eNLives { get; set; }
+    public float eNLives { get; set; }
+}
+public class GameObjectiveChangedEvent : SDD.Events.Event
+{
+    public int eNObjective { get; set; }
 }
 #endregion
 
@@ -53,7 +60,30 @@ public class PlayerHasAttackedEvent : SDD.Events.Event
 }
 public class PlayerHasBeenHitEvent : SDD.Events.Event
 {
-    public Player ePlayer;
+    public float eDamages { get; set; }
+}
+public class EnemyHasBeenHitEvent : SDD.Events.Event
+{
+    public float eDamages { get; set; }
+    public GameObject eEnemy { get; set; }
+
+}
+public class Player2HasSummonedEnemyEvent : SDD.Events.Event
+{
+    public Transform eSpawnPosition { get; set; }
+    public GameObject eEnemyType { get; set; }
+
+}
+public class PlayerTookABonusEvent : SDD.Events.Event
+{
+    public string eBonusName;
+}
+public class Player2WantToCheatEvent : SDD.Events.Event
+{
+
+}
+public class PlayerHasKilledEnemyEvent : SDD.Events.Event
+{
 }
 
 public class PlayerHasBeenHitAudioEvent : SDD.Events.Event
@@ -79,6 +109,9 @@ public class PlayerStoppedWalkingAudioEvent : SDD.Events.Event
 {
 
 }
+public class setPlayerHealthEvent : SDD.Events.Event
+{
 
+}
 
 #endregion

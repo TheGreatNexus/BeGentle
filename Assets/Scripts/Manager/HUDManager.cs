@@ -4,42 +4,44 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using SDD.Events;
+using TMPro;
 
 
 public class HUDManager : Manager<HUDManager>
 {
-	[Header("HudManager")]
-	[Header("Texts")]
-	[SerializeField] private Text m_TxtNLives;
-	//[SerializeField] private Text m_TxtScore;
+    [SerializeField] Slider slider;
+    [SerializeField] GameObject player;
+	[SerializeField] GameObject mapPlayer;
+	[SerializeField] TextMeshProUGUI nextIncomeTime;
+    [SerializeField] TextMeshProUGUI nextIncome;
+    [SerializeField] TextMeshProUGUI actualMoney;
 
-	[SerializeField] private GameObject m_Life1;
-	[SerializeField] private GameObject m_Life2;
-	[SerializeField] private GameObject m_Life3;
-	#region Manager implementation
-	protected override IEnumerator InitCoroutine()
-	{
-		yield break;
-	}
-	#endregion
+    //[SerializeField] private Text m_TxtScore;
+    #region Manager implementation
+    protected override IEnumerator InitCoroutine()
+    {
+        yield break;
+    }
+    #endregion
 
-	#region Callbacks to GameManager events
-	protected override void GameStatisticsChanged(GameStatisticsChangedEvent e)
-	{
-		//m_TxtBestScore.text = e.eBestScore.ToString();
-		//m_TxtScore.text = e.eScore.ToString();
-		if (e.eNLives == 2)
-		{
-			m_Life3.SetActive(false);
-		}
-		if (e.eNLives == 1)
-		{
-			m_Life2.SetActive(false);
-		}
-        if (e.eNLives == 0)
-        {
-            m_Life1.SetActive(false);
-        }
-	}
-	#endregion
+    protected override void setPlayerHealth(setPlayerHealthEvent e)
+    {
+        slider.value = player.GetComponent<Player>().getPlayerHp();
+    }
+
+
+    #region Callbacks to GameManager events
+    protected override void GameStatisticsChanged(GameStatisticsChangedEvent e)
+    {
+		nextIncome.text= mapPlayer.GetComponent<MapPlayer>().getIncomeValue().ToString();
+        nextIncomeTime.text = mapPlayer.GetComponent<MapPlayer>().getNextIncome().ToString();
+        actualMoney.text = mapPlayer.GetComponent<MapPlayer>().getMoney().ToString();
+		//mapPlayer.GetComponent<MapPlayer>().get
+    }
+
+    protected override void GameObjectiveChanged(GameObjectiveChangedEvent e)
+    {
+
+    }
+    #endregion
 }
