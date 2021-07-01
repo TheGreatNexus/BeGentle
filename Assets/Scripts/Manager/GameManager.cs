@@ -38,6 +38,10 @@ public class GameManager : Manager<GameManager>
     [SerializeField] private float m_BonusCooldown;
     private float m_NextBonus;
 
+    [SerializeField] AudioClip a_Music;
+    [SerializeField] AudioClip a_Birds;
+    [SerializeField] AudioSource a_Source;
+
     //Players
     //[SerializeField]
     //List<PlayerController> m_Players = new List<PlayerController>();
@@ -102,6 +106,7 @@ public class GameManager : Manager<GameManager>
             spawnBonus();
             m_NextBonus += m_BonusCooldown;
         }
+        playMusic();
 
     }
 
@@ -258,6 +263,12 @@ public class GameManager : Manager<GameManager>
 
         Instantiate(bonusType, spawnPlace, bonusType.transform.rotation);
 
+    }
+    void playMusic(){
+        if(!a_Source.isPlaying){
+            a_Source.clip = a_Music;
+            a_Source.Play();
+        }
     }
 
 

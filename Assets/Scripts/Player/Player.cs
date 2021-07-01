@@ -26,11 +26,25 @@ public class Player : MonoBehaviour
     private float m_SpeedBonusTimer;
     [SerializeField] int m_SpeedBonusAmount;
     [SerializeField] float m_SpeedBonusTime;
+    private bool isUnderBonusSpeed;
+
+    //Audio
+    [SerializeField] AudioClip a_Hit;
+    [SerializeField] AudioClip a_Missed;
+    [SerializeField] AudioClip a_Run;
+    [SerializeField] AudioClip a_GotHit;
+    [SerializeField] AudioClip a_Death;
+    [SerializeField] AudioClip a_HealthBonus;
+    [SerializeField] AudioClip a_SpeedBonus;
+    [SerializeField] AudioSource a_Source;
+    [SerializeField] AudioSource a_WalkSource;
+
 
     private bool hasBeenHitRecently;
     // Start is called before the first frame update
     void Start()
     {
+        isUnderBonusSpeed = false;
         m_PlayerDamages = 10f;
         m_WalkingState = walkingState.STOP;
         m_BattleState = BattleState.DEFAULT;
@@ -39,6 +53,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(m_WalkingState);
         //Attack management
         if (Input.GetButtonDown("Fire1"))
         {
@@ -53,6 +68,7 @@ public class Player : MonoBehaviour
         }
         if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0 && m_WalkingState != walkingState.STOP)
         {
+            a_WalkSource.Stop();
             EventManager.Instance.Raise(new PlayerStoppedWalkingAudioEvent());
             m_WalkingState = walkingState.STOP;
         }
@@ -62,10 +78,13 @@ public class Player : MonoBehaviour
             hasBeenHitRecently = false;
         }
         //SpeedBonus Expired
-        if (m_WalkingState== walkingState.SPEEDBONUS && Time.time > m_SpeedBonusTimer)
+        if (Time.time > m_SpeedBonusTimer&& isUnderBonusSpeed==true)
         {
-            m_WalkingState = walkingState.RUNNING;
+            isUnderBonusSpeed = false;
             gameObject.GetComponent<PlayerMovement>().setSpeed(-m_SpeedBonusAmount);
+        }
+        if(m_WalkingState!= walkingState.STOP){
+            playWalkingAudio();
         }
 
     }
@@ -114,10 +133,12 @@ public class Player : MonoBehaviour
         switch (m_BattleState)
         {
             case BattleState.HITTING:
-                EventManager.Instance.Raise(new PlayerHasHitAudioEvent());
+                a_Source.clip = a_Hit;
+                a_Source.Play();
                 break;
             case BattleState.MISSING:
-                EventManager.Instance.Raise(new PlayerHasMissHitAudioEvent());
+                a_Source.clip = a_Missed;
+                a_Source.Play();
                 break;
             default:
                 break;
@@ -129,6 +150,8 @@ public class Player : MonoBehaviour
     {
         if (hasBeenHitRecently == false)
         {
+            a_Source.clip = a_GotHit;
+            a_Source.Play();
             m_playerHP -= dmg;
             hasBeenHitRecently = true;
             m_InvincibilityStarted = Time.time;
@@ -145,6 +168,8 @@ public class Player : MonoBehaviour
     {
         if (bonusName == "Health")
         {
+            a_Source.clip = a_HealthBonus;
+            a_Source.Play();
             m_playerHP += 25;
             if (m_playerHP > m_playerMaxHP)
             {
@@ -153,9 +178,12 @@ public class Player : MonoBehaviour
         }
         if (bonusName == "Speed")
         {
+            a_Source.clip = a_SpeedBonus;
+            a_Source.Play();
             m_SpeedBonusTimer = Time.time + m_SpeedBonusTime;
-            if (m_WalkingState != walkingState.SPEEDBONUS)
+            if (isUnderBonusSpeed == false)
             {
+                isUnderBonusSpeed = true;
                 gameObject.GetComponent<PlayerMovement>().setSpeed(m_SpeedBonusAmount);
                 m_WalkingState = walkingState.SPEEDBONUS;
             }
@@ -169,4 +197,11 @@ public class Player : MonoBehaviour
     //         EventManager.Instance.Raise(new PlayerHasBeenHitEvent());
     //     }
     // }
+    void playWalkingAudio(){
+        if (!a_WalkSource.isPlaying)
+        {
+            a_WalkSource.clip = a_Run;
+            a_WalkSource.Play();
+        }
+    }
 }

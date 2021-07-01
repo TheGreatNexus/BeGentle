@@ -17,6 +17,13 @@ public class Enemy : MonoBehaviour, IHit
     [SerializeField] private Animator anim;
     [SerializeField] private NavMeshAgent agent;
     private GameObject player;
+    //Audio
+    [SerializeField] AudioClip a_Hit;
+    [SerializeField] AudioClip a_Missed;
+    [SerializeField] AudioClip a_Walk;
+    [SerializeField] AudioClip a_GotHit;
+    [SerializeField] AudioClip a_Death;
+    [SerializeField] AudioSource a_Source;
     void Start()
     {
         player = GameObject.Find("Player");
@@ -38,7 +45,7 @@ public class Enemy : MonoBehaviour, IHit
         // if (isInRange(player,gameObject)){
         //Check if the player is in attack range
         RaycastHit r_Hit;
-        if ((!Physics.Raycast(new Vector3(transform.position.x, (transform.position.y), transform.position.z), transform.TransformDirection(-Vector3.forward), out r_Hit, 2)))
+        if ((!Physics.Raycast(new Vector3(transform.position.x, (transform.position.y), transform.position.z), transform.TransformDirection(-Vector3.forward), out r_Hit, 2))|| r_Hit.collider.gameObject.tag!= "Player")
         {
             //Debug.DrawRay(new Vector3(transform.position.x, (transform.position.y), transform.position.z), transform.TransformDirection(-Vector3.forward) * 2, Color.yellow);
             anim.SetBool("AttackRange", false);
@@ -49,6 +56,7 @@ public class Enemy : MonoBehaviour, IHit
             try
             {
                 agent.SetDestination(player.transform.position);
+                playWalkingAudio();
             }
             catch (Exception e)
             {
@@ -80,9 +88,15 @@ public class Enemy : MonoBehaviour, IHit
         {
             if (r_Hit.collider.gameObject.tag == "Player")
             {
+                a_Source.clip = a_Hit;
+                a_Source.Play();
                 EventManager.Instance.Raise(new PlayerHasBeenHitEvent() { eDamages = m_EnemyDamages });
                 anim.SetBool("canAttack", false);
                 m_NextAttack = Time.time + m_AttackCooldown;
+            }
+            else{
+                a_Source.clip = a_Missed;
+                a_Source.Play();
             }
 
         }
@@ -97,6 +111,8 @@ public class Enemy : MonoBehaviour, IHit
     {
         agent.enabled = false;
         anim.SetTrigger("HasBeenHitted");
+        a_Source.clip=a_GotHit;
+        a_Source.Play();
         m_EnemyHp -= damage;
     }
 
@@ -113,6 +129,8 @@ public class Enemy : MonoBehaviour, IHit
     {
         if (m_EnemyHp <= 0)
         {
+            a_Source.clip = a_Death;
+            a_Source.Play();
             agent.enabled = false;
             transform.position = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z);
             EventManager.Instance.Raise(new PlayerHasKilledEnemyEvent());
@@ -125,5 +143,11 @@ public class Enemy : MonoBehaviour, IHit
 
         yield return new WaitForSeconds(3);
         Destroy(transform.parent.gameObject);
+    }
+    void playWalkingAudio(){
+        if(!a_Source.isPlaying){
+            a_Source.clip=a_Walk;
+            a_Source.Play();
+        }
     }
 }

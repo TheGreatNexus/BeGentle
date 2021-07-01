@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9151216593527983069}
   - component: {fileID: 1896007209989654929}
   - component: {fileID: 1172945119242430761}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 8401717509388660779}
   - component: {fileID: 6053674129154592330}
   - component: {fileID: -8496960948819161861}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Speed_Bonus
   m_TagString: Bonus
   m_Icon: {fileID: 0}
@@ -142,6 +142,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bonusName: Speed
+  a_Source: {fileID: 0}
+  a_Spawn: {fileID: 8300000, guid: d46323e22e74e46baa241cbf48c85671, type: 3}
 --- !u!1 &8113024608066715815
 GameObject:
   m_ObjectHideFlags: 0
@@ -153,7 +155,7 @@ GameObject:
   - component: {fileID: 5775102469110039125}
   - component: {fileID: 5085684661656539084}
   - component: {fileID: 5415338182184553977}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3186775141450230960}
   - component: {fileID: 6355790116168945293}
   - component: {fileID: -5934607398921215493}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Life_Bonus
   m_TagString: Bonus
   m_Icon: {fileID: 0}
@@ -109,3 +109,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bonusName: Health
+  a_Spawn: {fileID: 8300000, guid: fe0b1f9aeb45b41b089175aeeabd5d95, type: 3}

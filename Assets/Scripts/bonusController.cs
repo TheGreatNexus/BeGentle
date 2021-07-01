@@ -6,7 +6,12 @@ using SDD.Events;
 public class bonusController : MonoBehaviour
 {
     [SerializeField] string bonusName;
+    //[SerializeField] AudioSource a_Source;
+    [SerializeField] AudioClip a_Spawn;
     // Update is called once per frame
+    void Start(){
+        AudioSource.PlayClipAtPoint(a_Spawn,this.gameObject.transform.position);
+    }
     void Update()
     {
 
