@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 7288744268242240605}
-  m_PlayerSpeed: 10
+  m_PlayerInitialSpeed: 0
   m_PlayerSensitivity: 3
 --- !u!114 &7288744266663026697
 MonoBehaviour:
@@ -189,6 +189,17 @@ MonoBehaviour:
   m_PlayerCDAttack: 1
   m_Range: 200
   anim: {fileID: 7288744268530140714}
+  m_SpeedBonusAmount: 0
+  m_SpeedBonusTime: 0
+  a_Hit: {fileID: 8300000, guid: 3bc98087dac2efe488437ff2001b1ed9, type: 3}
+  a_Missed: {fileID: 8300000, guid: fe0b1f9aeb45b41b089175aeeabd5d95, type: 3}
+  a_Run: {fileID: 8300000, guid: e821e0bf1c4d4ca4e924dd9bcb914227, type: 3}
+  a_GotHit: {fileID: 8300000, guid: 7aa09f34d3859d64fb13bdff55187356, type: 3}
+  a_Death: {fileID: 8300000, guid: 2c707c34e6e0da4488ac3b578220f041, type: 3}
+  a_HealthBonus: {fileID: 8300000, guid: 116d5965c025fe744992ad9c289619a7, type: 3}
+  a_SpeedBonus: {fileID: 8300000, guid: e9955529d9e847f43a4e5a16d0e66b1e, type: 3}
+  a_Source: {fileID: 0}
+  a_WalkSource: {fileID: 0}
 --- !u!1 &7288744266943794200
 GameObject:
   m_ObjectHideFlags: 0

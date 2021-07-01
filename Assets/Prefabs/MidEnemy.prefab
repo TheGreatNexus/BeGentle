@@ -884,6 +884,12 @@ MonoBehaviour:
   m_AttackCooldown: 2
   anim: {fileID: 2566431854029940118}
   agent: {fileID: 3739716709031792070}
+  a_Hit: {fileID: 8300000, guid: 8713e54b4b84e5b418ed33063dc95094, type: 3}
+  a_Missed: {fileID: 8300000, guid: 29351a0e741f3774292829ae8b700a9a, type: 3}
+  a_Walk: {fileID: 8300000, guid: 20483b5ea7460144d88b161f4c407a58, type: 3}
+  a_GotHit: {fileID: 8300000, guid: 9069a8173cae0494bb3359d24858d0f1, type: 3}
+  a_Death: {fileID: 8300000, guid: 3f1f9bc7ed184204bb601ba0710a0304, type: 3}
+  a_Source: {fileID: 0}
 --- !u!1 &3036397536166312757
 GameObject:
   m_ObjectHideFlags: 0

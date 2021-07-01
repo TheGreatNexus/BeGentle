@@ -142,8 +142,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bonusName: Speed
-  a_Source: {fileID: 0}
-  a_Spawn: {fileID: 8300000, guid: d46323e22e74e46baa241cbf48c85671, type: 3}
+  a_Spawn: {fileID: 8300000, guid: e9955529d9e847f43a4e5a16d0e66b1e, type: 3}
 --- !u!1 &8113024608066715815
 GameObject:
   m_ObjectHideFlags: 0

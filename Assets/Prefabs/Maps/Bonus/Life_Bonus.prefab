@@ -109,4 +109,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bonusName: Health
-  a_Spawn: {fileID: 8300000, guid: fe0b1f9aeb45b41b089175aeeabd5d95, type: 3}
+  a_Spawn: {fileID: 8300000, guid: 116d5965c025fe744992ad9c289619a7, type: 3}
