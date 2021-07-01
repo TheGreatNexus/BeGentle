@@ -17,7 +17,8 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody m_Rigidbody;
 
     // Player speed variables
-    [SerializeField] private float m_PlayerSpeed;
+    [SerializeField] private float m_PlayerInitialSpeed;
+     private float m_PlayerSpeed;
     [SerializeField] private float m_PlayerSensitivity;
 
 
@@ -41,8 +42,7 @@ public class PlayerMovement : MonoBehaviour
     }
     void Start()
     {
-        m_PlayerSpeed = 5;
-        m_PlayerSensitivity = 5f;
+        m_PlayerSpeed = m_PlayerInitialSpeed;
     }
 
     // Update is called once per frame
@@ -82,5 +82,14 @@ public class PlayerMovement : MonoBehaviour
         eulerAngles.x = Mathf.Clamp(eulerAngles.x - angularIncrement, -90f, 90f);
         */
 
+    }
+
+    public void superSpeed(){
+        m_PlayerSpeed = 30;
+    }
+    public void setSpeed(float speed)
+    {
+        m_PlayerSpeed += speed;
+        Debug.Log(m_PlayerSpeed);
     }
 }
