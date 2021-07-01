@@ -5,7 +5,7 @@ using SDD.Events;
 
 public class Player : MonoBehaviour
 {
-    private enum walkingState { STOP, WALKING, RUNNING };
+    private enum walkingState { STOP, WALKING, RUNNING, SPEEDBONUS };
     private enum BattleState { DEFAULT, ATTACKING, HITTING, MISSING, COOLDOWN };
     private BattleState m_BattleState;
     private walkingState m_WalkingState;
@@ -17,10 +17,15 @@ public class Player : MonoBehaviour
     [SerializeField] private float m_PlayerCDAttack;
     [SerializeField] private float m_Range = 200;
     [SerializeField] private Animator anim;
-    
+
     //Invicibility variables
     private float m_InvincibilityDuration = 1f;
     private float m_InvincibilityStarted;
+
+    //Bonus Variables
+    private float m_SpeedBonusTimer;
+    [SerializeField] int m_SpeedBonusAmount;
+    [SerializeField] float m_SpeedBonusTime;
 
     private bool hasBeenHitRecently;
     // Start is called before the first frame update
@@ -46,14 +51,21 @@ public class Player : MonoBehaviour
             EventManager.Instance.Raise(new PlayerWalkingAudioEvent());
             m_WalkingState = walkingState.RUNNING;
         }
-        if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0 && m_WalkingState == walkingState.RUNNING)
+        if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0 && m_WalkingState != walkingState.STOP)
         {
             EventManager.Instance.Raise(new PlayerStoppedWalkingAudioEvent());
             m_WalkingState = walkingState.STOP;
         }
         //hasBeenHitRecentlyManagement
-        if(Time.time> m_InvincibilityStarted + m_InvincibilityDuration){
+        if (Time.time > m_InvincibilityStarted + m_InvincibilityDuration)
+        {
             hasBeenHitRecently = false;
+        }
+        //SpeedBonus Expired
+        if (m_WalkingState== walkingState.SPEEDBONUS && Time.time > m_SpeedBonusTimer)
+        {
+            m_WalkingState = walkingState.RUNNING;
+            gameObject.GetComponent<PlayerMovement>().setSpeed(-m_SpeedBonusAmount);
         }
 
     }
@@ -63,7 +75,8 @@ public class Player : MonoBehaviour
 
     }
 
-    public void boostedStats(){
+    public void boostedStats()
+    {
         m_PlayerDamages = 1000;
         m_playerMaxHP = 1000;
         m_playerHP = 1000;
@@ -78,7 +91,7 @@ public class Player : MonoBehaviour
         if (Physics.Raycast(new Vector3(transform.position.x, (transform.position.y) + 1, transform.position.z), transform.TransformDirection(Vector3.forward), out r_Hit, m_Range * 0.01f) && r_Hit.transform.tag == "Enemy")
         {
             Debug.DrawRay(new Vector3(transform.position.x, (transform.position.y) + 1, transform.position.z), transform.TransformDirection(Vector3.forward) * 200, Color.yellow);
-            EventManager.Instance.Raise(new EnemyHasBeenHitEvent(){eDamages = m_PlayerDamages, eEnemy = r_Hit.collider.gameObject});
+            EventManager.Instance.Raise(new EnemyHasBeenHitEvent() { eDamages = m_PlayerDamages, eEnemy = r_Hit.collider.gameObject });
             m_BattleState = BattleState.HITTING;
             attackingAudio();
             m_BattleState = BattleState.DEFAULT;
@@ -123,8 +136,30 @@ public class Player : MonoBehaviour
 
     }
 
-    public float getPlayerHp(){
+    public float getPlayerHp()
+    {
         return m_playerHP;
+    }
+
+    public void takeBonus(string bonusName)
+    {
+        if (bonusName == "Health")
+        {
+            m_playerHP += 25;
+            if (m_playerHP > m_playerMaxHP)
+            {
+                m_playerHP = m_playerMaxHP;
+            }
+        }
+        if (bonusName == "Speed")
+        {
+            m_SpeedBonusTimer = Time.time + m_SpeedBonusTime;
+            if (m_WalkingState != walkingState.SPEEDBONUS)
+            {
+                gameObject.GetComponent<PlayerMovement>().setSpeed(m_SpeedBonusAmount);
+                m_WalkingState = walkingState.SPEEDBONUS;
+            }
+        }
     }
     // private void OnTriggerStay(Collider other)
     // {

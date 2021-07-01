@@ -74,6 +74,10 @@ public class Player2HasSummonedEnemyEvent : SDD.Events.Event
     public GameObject eEnemyType { get; set; }
 
 }
+public class PlayerTookABonusEvent : SDD.Events.Event
+{
+    public string eBonusName;
+}
 public class Player2WantToCheatEvent : SDD.Events.Event
 {
 

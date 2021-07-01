@@ -17,7 +17,8 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody m_Rigidbody;
 
     // Player speed variables
-    [SerializeField] private float m_PlayerSpeed;
+    [SerializeField] private float m_PlayerInitialSpeed;
+     private float m_PlayerSpeed;
     [SerializeField] private float m_PlayerSensitivity;
 
 
@@ -41,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
     }
     void Start()
     {
-        
+        m_PlayerSpeed = m_PlayerInitialSpeed;
     }
 
     // Update is called once per frame
@@ -85,5 +86,10 @@ public class PlayerMovement : MonoBehaviour
 
     public void superSpeed(){
         m_PlayerSpeed = 30;
+    }
+    public void setSpeed(float speed)
+    {
+        m_PlayerSpeed += speed;
+        Debug.Log(m_PlayerSpeed);
     }
 }
