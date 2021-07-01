@@ -5,6 +5,7 @@ using UnityEngine;
 using SDD.Events;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
+using TMPro;
 
 public enum GameState { gameMenu, gamePlay, gamePause }
 
@@ -35,12 +36,17 @@ public class GameManager : Manager<GameManager>
     private float m_TimeLeft;
     private float m_MinutesLeft;
     private float m_SecondsLeft;
+    [SerializeField] TextMeshProUGUI minutesFPS;
+    [SerializeField] TextMeshProUGUI secondesFPS;
+    [SerializeField] TextMeshProUGUI minutesMap;
+    [SerializeField] TextMeshProUGUI secondesMap;
     [SerializeField] private float m_BonusCooldown;
     private float m_NextBonus;
 
     [SerializeField] AudioClip a_Music;
     [SerializeField] AudioClip a_Birds;
     [SerializeField] AudioSource a_Source;
+
 
     //Players
     //[SerializeField]
@@ -94,8 +100,12 @@ public class GameManager : Manager<GameManager>
     #endregion
     void Update()
     {
-        m_MinutesLeft = Mathf.Floor((m_TimeLeft - Time.time / 60));
-        m_SecondsLeft = (m_TimeLeft - Time.time) - (60 * m_MinutesLeft);
+        m_MinutesLeft = Mathf.Floor(((m_TimeLeft - Time.time) / 60));
+        m_SecondsLeft = Mathf.Floor((m_TimeLeft - Time.time) - (60 * m_MinutesLeft));
+        minutesFPS.text = m_MinutesLeft.ToString();
+        secondesFPS.text = m_SecondsLeft.ToString();
+        minutesMap.text = m_MinutesLeft.ToString();
+        secondesMap.text = m_SecondsLeft.ToString();
         if (Time.time > m_TimeLeft)
         {
             PlayerWin();
@@ -107,6 +117,7 @@ public class GameManager : Manager<GameManager>
             m_NextBonus += m_BonusCooldown;
         }
         playMusic();
+        EventManager.Instance.Raise(new GameStatisticsChangedEvent());
 
     }
 
@@ -114,7 +125,7 @@ public class GameManager : Manager<GameManager>
     private void MainMenuButtonClicked(MainMenuButtonClickedEvent e)
     {
         Cursor.lockState = CursorLockMode.None;
-        SceneManager.LoadScene("MainScene", LoadSceneMode.Single);
+        SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
         Cursor.lockState = CursorLockMode.None;
     }
 
@@ -144,14 +155,20 @@ public class GameManager : Manager<GameManager>
     private void PlayerHasBeenHit(PlayerHasBeenHitEvent e)
     {
         player.GetComponent<Player>().isHit(e.eDamages);
-        EventManager.Instance.Raise(new GameStatisticsChangedEvent() { eNLives = player.GetComponent<Player>().getPlayerHp() });
+        EventManager.Instance.Raise(new setPlayerHealthEvent());
+        if(player.GetComponent<Player>().isDead()== true){
+            PlayerLoose();
+        }
+        //EventManager.Instance.Raise(new GameStatisticsChangedEvent() { eNLives = player.GetComponent<Player>().getPlayerHp() });
     }
     private void PlayerTookABonus(PlayerTookABonusEvent e)
     {
         player.GetComponent<Player>().takeBonus(e.eBonusName);
+        EventManager.Instance.Raise(new setPlayerHealthEvent());
     }
     private void Player2WantToCheat(Player2WantToCheatEvent e)
     {
+        //EventManager.Instance.Raise(new GameStatisticsChangedEvent());
         player.GetComponent<Player>().boostedStats();
         player.GetComponent<PlayerMovement>().superSpeed();
     }
@@ -167,7 +184,6 @@ public class GameManager : Manager<GameManager>
 
     private void Player2SummonedEnemy(Player2HasSummonedEnemyEvent e)
     {
-        Debug.Log(e.eEnemyType);
         Instantiate(e.eEnemyType, e.eSpawnPosition.position, Quaternion.identity);
     }
     #endregion
@@ -178,13 +194,13 @@ public class GameManager : Manager<GameManager>
     }
 
     //EVENTS
-    private void Menu()
-    {
-        Cursor.visible = true;
-        SetTimeScale(0);
-        m_GameState = GameState.gameMenu;
-        EventManager.Instance.Raise(new GameMenuEvent());
-    }
+    // private void Menu()
+    // {
+    //     Cursor.visible = true;
+    //     SetTimeScale(0);
+    //     m_GameState = GameState.gameMenu;
+    //     EventManager.Instance.Raise(new GameMenuEvent());
+    // }
     private void Quit()
     {
         EventManager.Instance.Raise(new GameQuitEvent());
@@ -193,10 +209,10 @@ public class GameManager : Manager<GameManager>
     private void Play()
     {
         //InitNewGame();
+        Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         SetTimeScale(1);
         m_GameState = GameState.gamePlay;
-        //GameObject.Find("NbLife").transform.GetChild(0).GetComponent<UnityEngine.UI.Text>().text = m_StartLives.ToString();
         EventManager.Instance.Raise(new GamePlayEvent());
         m_TimeLeft = Time.time + m_Objectif;
         m_NextBonus = Time.time + m_BonusCooldown;
@@ -204,7 +220,7 @@ public class GameManager : Manager<GameManager>
 
     private void Pause()
     {
-        Debug.Log("pause clicked");
+        Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         SetTimeScale(0);
         m_GameState = GameState.gamePause;
@@ -214,6 +230,7 @@ public class GameManager : Manager<GameManager>
     private void Resume()
     {
         SetTimeScale(1);
+        Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         m_GameState = GameState.gamePlay;
         EventManager.Instance.Raise(new GameResumeEvent());
@@ -235,7 +252,7 @@ public class GameManager : Manager<GameManager>
         SetTimeScale(0);
         Cursor.visible = true;
         m_GameState = GameState.gamePause;
-        EventManager.Instance.Raise(new WinEvent());
+        EventManager.Instance.Raise(new GameOverEvent());
     }
 
     private void spawnBonus()

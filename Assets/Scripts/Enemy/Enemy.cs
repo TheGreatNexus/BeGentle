@@ -60,7 +60,7 @@ public class Enemy : MonoBehaviour, IHit
             }
             catch (Exception e)
             {
-
+                print("error");
             }
         }
         else
@@ -83,7 +83,7 @@ public class Enemy : MonoBehaviour, IHit
     public void enemyAttack()
     {
         RaycastHit r_Hit;
-        Physics.BoxCast(new Vector3(transform.position.x, (transform.position.y), transform.position.z), transform.localScale, -transform.forward, out r_Hit, Quaternion.identity, 2);
+        Physics.BoxCast(new Vector3(gameObject.transform.position.x, (gameObject.transform.position.y), gameObject.transform.position.z), transform.localScale, -transform.forward, out r_Hit, Quaternion.identity, 2);
         try
         {
             if (r_Hit.collider.gameObject.tag == "Player")
@@ -134,15 +134,8 @@ public class Enemy : MonoBehaviour, IHit
             agent.enabled = false;
             transform.position = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z);
             EventManager.Instance.Raise(new PlayerHasKilledEnemyEvent());
-            StartCoroutine(destroyGO());
+            Destroy(transform.parent.gameObject,3f);
         }
-    }
-
-    IEnumerator destroyGO()
-    {
-
-        yield return new WaitForSeconds(3);
-        Destroy(transform.parent.gameObject);
     }
     void playWalkingAudio(){
         if(!a_Source.isPlaying){

@@ -53,7 +53,6 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(m_WalkingState);
         //Attack management
         if (Input.GetButtonDown("Fire1"))
         {
@@ -78,12 +77,13 @@ public class Player : MonoBehaviour
             hasBeenHitRecently = false;
         }
         //SpeedBonus Expired
-        if (Time.time > m_SpeedBonusTimer&& isUnderBonusSpeed==true)
+        if (Time.time > m_SpeedBonusTimer && isUnderBonusSpeed == true)
         {
             isUnderBonusSpeed = false;
             gameObject.GetComponent<PlayerMovement>().setSpeed(-m_SpeedBonusAmount);
         }
-        if(m_WalkingState!= walkingState.STOP){
+        if (m_WalkingState != walkingState.STOP)
+        {
             playWalkingAudio();
         }
 
@@ -197,11 +197,24 @@ public class Player : MonoBehaviour
     //         EventManager.Instance.Raise(new PlayerHasBeenHitEvent());
     //     }
     // }
-    void playWalkingAudio(){
+    void playWalkingAudio()
+    {
         if (!a_WalkSource.isPlaying)
         {
             a_WalkSource.clip = a_Run;
             a_WalkSource.Play();
+        }
+    }
+
+    public bool isDead()
+    {
+        if (m_playerHP <= 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

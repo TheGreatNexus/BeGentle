@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SDD.Events;
+using UnityEngine.SceneManagement;
 
 public class MenuManager : Manager<MenuManager>
 {
@@ -11,10 +12,10 @@ public class MenuManager : Manager<MenuManager>
 
 	#region Panels
 	[Header("Panels")]
-	[SerializeField] GameObject m_PanelMainMenu;
+	//[SerializeField] GameObject m_PanelMainMenu;
 	[SerializeField] GameObject m_PanelInGameMenu;
 	[SerializeField] GameObject m_PanelGameOver;
-    [SerializeField] GameObject m_PanelWin;
+    //[SerializeField] GameObject m_PanelWin;
 
 	List<GameObject> m_AllPanels;
 	#endregion
@@ -46,10 +47,10 @@ public class MenuManager : Manager<MenuManager>
 	void RegisterPanels()
 	{
 		m_AllPanels = new List<GameObject>();
-		if (m_PanelMainMenu) m_AllPanels.Add(m_PanelMainMenu);
+		//if (m_PanelMainMenu) m_AllPanels.Add(m_PanelMainMenu);
 		if (m_PanelInGameMenu) m_AllPanels.Add(m_PanelInGameMenu);
 		if (m_PanelGameOver) m_AllPanels.Add(m_PanelGameOver);
-        if (m_PanelWin) m_AllPanels.Add(m_PanelWin);
+        //if (m_PanelWin) m_AllPanels.Add(m_PanelWin);
 	}
 
 	void OpenPanel(GameObject panel)
@@ -65,11 +66,11 @@ public class MenuManager : Manager<MenuManager>
 		EventManager.Instance.Raise(new EscapeButtonClickedEvent());
 	}
 
-	public void PlayButtonHasBeenClicked()
-	{
-		//EventManager.Instance.Raise(new PlayButtonClickedEvent());
-		AudioSource audioSource = GameObject.Find("Validation").GetComponent<AudioSource>();
-	}
+	// public void PlayButtonHasBeenClicked()
+	// {
+	// 	//EventManager.Instance.Raise(new PlayButtonClickedEvent());
+	// 	AudioSource audioSource = GameObject.Find("Validation").GetComponent<AudioSource>();
+	// }
 
 	public void ResumeButtonHasBeenClicked()
 	{
@@ -83,15 +84,14 @@ public class MenuManager : Manager<MenuManager>
     public void QuitButtonHasBeenClicked()
     {
 		EventManager.Instance.Raise(new QuitButtonClickedEvent());
-		AudioSource audioSource = GameObject.Find("Validation").GetComponent<AudioSource>();
 	}
 	#endregion
 
 	#region Callbacks to GameManager events
-	protected override void GameMenu(GameMenuEvent e)
-	{
-		OpenPanel(m_PanelMainMenu);
-	}
+	// protected override void GameMenu(GameMenuEvent e)
+	// {
+	// 	OpenPanel(m_PanelMainMenu);
+	// }
 
 	protected override void GamePlay(GamePlayEvent e)
 	{
@@ -102,13 +102,14 @@ public class MenuManager : Manager<MenuManager>
 	{
 		OpenPanel(m_PanelGameOver);
 	}
-    protected override void Win(WinEvent e)
-    {
-        OpenPanel(m_PanelWin);
-    }
+    // protected override void Win(WinEvent e)
+    // {
+    //     OpenPanel(m_PanelWin);
+    // }
 
 	protected override void GamePause(GamePauseEvent e)
 	{
+		Debug.Log("test");
 		OpenPanel(m_PanelInGameMenu);
 	}
 

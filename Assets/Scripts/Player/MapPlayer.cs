@@ -87,4 +87,17 @@ public class MapPlayer : MonoBehaviour
         }
 
     }
+    
+    public int getIncomeValue(){
+        return m_Income;
+    }
+    public int getNextIncome()
+    {
+        int nextTimeIncome = Mathf.FloorToInt(m_NextIncome -Time.time );
+        return nextTimeIncome;
+    }
+
+    public int getMoney(){
+        return m_Money;
+    }
 }

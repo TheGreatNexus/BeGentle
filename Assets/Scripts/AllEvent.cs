@@ -109,6 +109,9 @@ public class PlayerStoppedWalkingAudioEvent : SDD.Events.Event
 {
 
 }
+public class setPlayerHealthEvent : SDD.Events.Event
+{
 
+}
 
 #endregion
