@@ -3,85 +3,57 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SDD.Events;
-
-[RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
 {
-
-    AudioSource _aPlayerWalking;
-
-    // Camera obj
-    [SerializeField] private Camera cam;
-
-    // Player Rb
-    Rigidbody m_Rigidbody;
+    //Controller reference
+    [SerializeField] CharacterController controller;
 
     // Player speed variables
     [SerializeField] private float m_PlayerInitialSpeed;
-     private float m_PlayerSpeed;
-    [SerializeField] private float m_PlayerSensitivity;
-
+    private float m_PlayerSpeed;
 
     // Player Position's variables
     float m_inputX;
     float m_inputZ;
-    Vector3 m_moveHorizontal;
-    Vector3 m_moveVertical;
+
+    // Gravity management
     Vector3 m_velocity;
+    float m_gravity = -9.81f;
+    
+    // Check if we're one the ground
+    [SerializeField] Transform m_groundCheck;
+    [SerializeField] float m_groundDistance = 0.4f;
+    [SerializeField] LayerMask m_groundMask;
+    private bool isGrounded;
 
-    // Player Rotation's variables
-    float m_yRot;
-    Vector3 m_rotation;
+    // Game Functions
 
-    // Camera Rotation's variables
-    float m_xRot;
-    Vector3 m_cameraRotation;
-    protected void Awake()
-    {
-        m_Rigidbody = GetComponent<Rigidbody>();
-    }
-    void Start()
-    {
+        // Set the player's speed to initial speed
+    void Start(){
         m_PlayerSpeed = m_PlayerInitialSpeed;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Player's position
+        // Check if tthe player is on the ground
+        isGrounded = Physics.CheckSphere(m_groundCheck.position, m_groundDistance , m_groundMask);
+
+        if(isGrounded && m_velocity.y < 0){
+            m_velocity.y = -2f;
+        }
+
+        //Player's inputs
         m_inputX = Input.GetAxisRaw("Horizontal");
         m_inputZ = Input.GetAxisRaw("Vertical");
 
-        m_moveHorizontal = transform.right * m_inputX;
-        m_moveVertical = transform.forward * m_inputZ;
+        Vector3 move = transform.right * m_inputX + transform.forward * m_inputZ;
 
-        m_velocity = (m_moveHorizontal + m_moveVertical).normalized * m_PlayerSpeed;
+        controller.Move(move * m_PlayerSpeed * Time.deltaTime);
 
-        //Player's rotation
-        m_yRot = Input.GetAxisRaw("Mouse X");
+        m_velocity.y += m_gravity * Time.deltaTime;
 
-        m_rotation = new Vector3(0, m_yRot, 0) * m_PlayerSensitivity;
-
-        //Camera's rotation
-        m_xRot = Input.GetAxisRaw("Mouse Y");
-
-        m_cameraRotation = new Vector3(m_xRot, 0, 0) * m_PlayerSensitivity;
-    }
-
-
-    void FixedUpdate()
-    {
-        m_Rigidbody.MovePosition(m_Rigidbody.position + m_velocity * Time.fixedDeltaTime);
-        m_Rigidbody.MoveRotation(m_Rigidbody.rotation * Quaternion.Euler(m_rotation));
-        cam.transform.Rotate(-m_cameraRotation);
-        /*float angularIncrement = m_PlayerSensitivity * Input.GetAxis("Mouse Y") ;//* Time.deltaTime;
-        Vector3 eulerAngles = cam.transform.localEulerAngles;
-        if (eulerAngles.x > 180f)
-            eulerAngles.x -= 360f;
-
-        eulerAngles.x = Mathf.Clamp(eulerAngles.x - angularIncrement, -90f, 90f);
-        */
-
+        controller.Move(m_velocity * Time.deltaTime);
     }
 
     public void superSpeed(){

@@ -9,6 +9,7 @@ TagManager:
   - Ground
   - Wall
   - Bonus
+  - Fire
   layers:
   - Default
   - TransparentFX
@@ -16,7 +17,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Ground
   - Outzone
   - Player
   - SpawningZone
