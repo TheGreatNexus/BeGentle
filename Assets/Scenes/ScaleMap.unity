@@ -109,7 +109,7 @@ NavMeshSettings:
     agentRadius: 0.5
     agentHeight: 2
     agentSlope: 45
-    agentClimb: 0.4
+    agentClimb: 0.7
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
     minRegionArea: 2
@@ -14973,11 +14973,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6280911116049730558, guid: 37c1523931c47f04c934191eff7e3994, type: 3}
       propertyPath: m_LocalScale.z
-      value: 2
+      value: 6.3738
       objectReference: {fileID: 0}
     - target: {fileID: 6280911116049730558, guid: 37c1523931c47f04c934191eff7e3994, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 140.96696
+      value: 140.99
       objectReference: {fileID: 0}
     - target: {fileID: 6280911116049730558, guid: 37c1523931c47f04c934191eff7e3994, type: 3}
       propertyPath: m_LocalPosition.y
@@ -17299,7 +17299,7 @@ GameObject:
   - component: {fileID: 1988369688}
   - component: {fileID: 1988369687}
   - component: {fileID: 1988369686}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18330,9 +18330,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8941024815019011967, guid: fdebb90abdffff441b461505247fb5aa, type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 2039
+      objectReference: {fileID: 0}
     - target: {fileID: 8941024816526920490, guid: fdebb90abdffff441b461505247fb5aa, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 8941024816526920493, guid: fdebb90abdffff441b461505247fb5aa, type: 3}
+      propertyPath: m_groundMask.m_Bits
+      value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 8941024816526920495, guid: fdebb90abdffff441b461505247fb5aa, type: 3}
       propertyPath: m_RootOrder
